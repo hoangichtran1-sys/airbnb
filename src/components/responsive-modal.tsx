@@ -32,17 +32,19 @@ export function ResponsiveModal({
     onOpenChange,
 }: ResponsiveModalProps) {
     const isMobile = useIsMobile();
-    
+
     if (isMobile) {
         return (
             <Drawer open={open} onOpenChange={onOpenChange}>
-                <DrawerContent>
+                <DrawerContent className="max-h-[90vh] flex flex-col">
                     <DrawerHeader>
                         <DrawerTitle>{title}</DrawerTitle>
                         <DrawerDescription>{description}</DrawerDescription>
                     </DrawerHeader>
                     <Separator />
-                    <div className="p-4">{children}</div>
+                    <div className="flex-1 overflow-y-auto p-4 pb-8">
+                        {children}
+                    </div>
                 </DrawerContent>
             </Drawer>
         );
@@ -50,9 +52,11 @@ export function ResponsiveModal({
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent>
-                <DialogHeader className="text-center">
-                    <DialogTitle>{title}</DialogTitle>
-                    <DialogDescription>{description}</DialogDescription>
+                <DialogHeader>
+                    <DialogTitle className="text-center">{title}</DialogTitle>
+                    <DialogDescription className="text-center">
+                        {description}
+                    </DialogDescription>
                 </DialogHeader>
                 <Separator />
                 {children}

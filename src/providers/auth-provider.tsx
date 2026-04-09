@@ -1,16 +1,23 @@
 "use client";
 
+import { useLoginModal } from "@/features/auth/hooks/use-login-modal";
+import { useRegisterModal } from "@/features/auth/hooks/use-register-modal";
 import { SignInModal } from "@/features/auth/ui/components/sign-in-modal";
-import { useState } from "react";
+import { SignUpModal } from "@/features/auth/ui/components/sign-up-modal";
 
 export const AuthProvider = () => {
-    const [isOpenModalSignIn, setIsOpenModalSignIn] = useState(true);
+    const { openLoginModal, setOpenLoginModal } = useLoginModal();
+    const { openRegisterModal, setOpenRegisterModal } = useRegisterModal();
 
     return (
         <>
             <SignInModal
-                open={isOpenModalSignIn}
-                onOpenChange={setIsOpenModalSignIn}
+                open={openLoginModal}
+                onOpenChange={setOpenLoginModal}
+            />
+            <SignUpModal
+                open={openRegisterModal}
+                onOpenChange={setOpenRegisterModal}
             />
         </>
     );

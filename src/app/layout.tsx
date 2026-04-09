@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Nunito } from "next/font/google";
 import { AuthProvider } from "@/providers/auth-provider";
 import { JotaiProvider } from "@/providers/jotai-provider";
+import { Toaster } from "sonner";
 
 import "./globals.css";
 
@@ -24,6 +25,7 @@ export default function RootLayout({
             <body className="min-h-full flex flex-col">
                 <JotaiProvider>
                     <AuthProvider />
+                    <Toaster />
                     {children}
                 </JotaiProvider>
             </body>
