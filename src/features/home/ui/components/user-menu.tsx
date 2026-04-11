@@ -19,6 +19,7 @@ import { CgProfile } from "react-icons/cg";
 import { FiHelpCircle } from "react-icons/fi";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { useRentModal } from "@/features/listing/hooks/use-rent-modal";
 
 // type UserData = Treaty.Data<typeof eden.health.get>;
 // type UserError = Treaty.Error<typeof eden.health.get>;
@@ -32,6 +33,7 @@ export const UserMenu = ({ currentUser }: UserMenuProps) => {
 
     const { onOpenLoginModal } = useLoginModal();
     const { onOpenRegisterModal } = useRegisterModal();
+    const { onOpenRentModal } = useRentModal();
 
     const onLogout = () => {
         authClient.signOut({
@@ -44,10 +46,21 @@ export const UserMenu = ({ currentUser }: UserMenuProps) => {
         });
     };
 
+    const onRent = () => {
+        if (!currentUser) {
+            onOpenLoginModal();
+            return;
+        }
+        onOpenRentModal();
+    };
+
     return (
         <div className="relative">
             <div className="flex flex-row items-center gap-3">
-                <div className="hidden md:block text-sm font-semibold py-3 px-4 rounded-full hover:bg-neutral-100 transition cursor-pointer">
+                <div
+                    onClick={onRent}
+                    className="hidden md:block text-sm font-semibold py-3 px-4 rounded-full hover:bg-neutral-100 transition cursor-pointer"
+                >
                     Airbnb your home
                 </div>
                 <DropdownMenu>
@@ -75,7 +88,7 @@ export const UserMenu = ({ currentUser }: UserMenuProps) => {
                                 <DropdownMenuItem onClick={() => {}}>
                                     My properties
                                 </DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => {}}>
+                                <DropdownMenuItem onClick={onOpenRentModal}>
                                     Airbnb my home
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator />

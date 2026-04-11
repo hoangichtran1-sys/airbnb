@@ -18,7 +18,7 @@ import { Separator } from "./ui/separator";
 
 interface ResponsiveModalProps {
     title: string;
-    description: string;
+    description?: string;
     children: React.ReactNode;
     open: boolean;
     onOpenChange: (open: boolean) => void;
@@ -39,7 +39,9 @@ export function ResponsiveModal({
                 <DrawerContent className="max-h-[90vh] flex flex-col">
                     <DrawerHeader>
                         <DrawerTitle>{title}</DrawerTitle>
-                        <DrawerDescription>{description}</DrawerDescription>
+                        {description && (
+                            <DrawerDescription>{description}</DrawerDescription>
+                        )}
                     </DrawerHeader>
                     <Separator />
                     <div className="flex-1 overflow-y-auto p-4 pb-8">
@@ -54,9 +56,11 @@ export function ResponsiveModal({
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle className="text-center">{title}</DialogTitle>
-                    <DialogDescription className="text-center">
-                        {description}
-                    </DialogDescription>
+                    {description && (
+                        <DialogDescription className="text-center">
+                            {description}
+                        </DialogDescription>
+                    )}
                 </DialogHeader>
                 <Separator />
                 {children}

@@ -3,6 +3,8 @@ import { Nunito } from "next/font/google";
 import { AuthProvider } from "@/providers/auth-provider";
 import { JotaiProvider } from "@/providers/jotai-provider";
 import { Toaster } from "sonner";
+import { NuqsAdapter } from "nuqs/adapters/next";
+import { QueryProvider } from "@/providers/query-provider";
 
 import "./globals.css";
 
@@ -23,11 +25,15 @@ export default function RootLayout({
     return (
         <html lang="en" className={`${font.className} h-full antialiased`}>
             <body className="min-h-full flex flex-col">
-                <JotaiProvider>
-                    <AuthProvider />
-                    <Toaster />
-                    {children}
-                </JotaiProvider>
+                <NuqsAdapter>
+                    <QueryProvider>
+                        <JotaiProvider>
+                            <AuthProvider />
+                            <Toaster />
+                            {children}
+                        </JotaiProvider>
+                    </QueryProvider>
+                </NuqsAdapter>
             </body>
         </html>
     );

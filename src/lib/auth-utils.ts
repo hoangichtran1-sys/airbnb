@@ -27,7 +27,8 @@ export const getCurrentUser = async () => {
     const session = await auth.api.getSession({
         headers: await headers(),
     });
-
+    // const { data } = await authClient.getSession()
+    // console.log(data ? data.user : null)
     if (!session || !session.user) {
         return null;
     }

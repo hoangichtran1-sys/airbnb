@@ -1,4 +1,5 @@
 import { BusinessError } from "@/config/error";
+import { listingRouter } from "@/features/listing/server/routers";
 import { Elysia } from "elysia";
 
 const app = new Elysia({ prefix: "/api", name: "base-router" })
@@ -6,21 +7,17 @@ const app = new Elysia({ prefix: "/api", name: "base-router" })
         BUSINESS_ERROR: BusinessError,
     })
     .onError(({ code, error, status }) => {
-        if (code === "BUSINESS_ERROR") {
-            return status(error.status, {
-                message: error.message,
-                code: error.error_code,
-            });
+        switch (code) {
+            case "BUSINESS_ERROR":
+                return status(error.status, {
+                    message: error.message,
+                    code: error.error_code,
+                });
+            default:
+                throw error;
         }
-
-        throw error;
     })
-    // .model({
-    //     "res.error": t.Object({
-    //         message: t.String({ minLength: 1 }),
-    //         code: t.Enum(ErrorCode),
-    //     }),
-    // })
+    .use(listingRouter)
     .get("/health", () => {
         return { status: "ok" };
     });
@@ -32,3 +29,10 @@ export const PUT = app.fetch;
 export const DELETE = app.fetch;
 
 export type App = typeof app;
+
+// .model({
+//     "res.error": t.Object({
+//         message: t.String({ minLength: 1 }),
+//         code: t.Enum(ErrorCode),
+//     }),
+// })

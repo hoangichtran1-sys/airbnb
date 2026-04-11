@@ -1,7 +1,7 @@
-const Page = () => {
-  return (
-    <div className=''>Page</div>
-  )
-}
+import { ListingsView } from "@/features/listing/ui/views/listings-view";
 
-export default Page
+const Page = () => {
+    return <ListingsView />;
+};
+
+export default Page;
