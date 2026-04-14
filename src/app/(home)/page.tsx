@@ -1,6 +1,6 @@
 import { ListingsView } from "@/features/listing/ui/views/listings-view";
 
-const Page = () => {
+const Page = async () => {
     return <ListingsView />;
 };
 

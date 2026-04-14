@@ -1,9 +1,9 @@
 import { eden } from "@/lib/rpc";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Static } from "elysia";
-import { listingCreateSchema } from "../types";
+import { listingCreateSchema } from "../schemas";
 import { Treaty } from "@elysiajs/eden";
-import { ErrorResponse } from "@/types";
+import { ErrorResponse } from "@/types/error-response";
 import { toast } from "sonner";
 
 type ResponseType = Treaty.Data<typeof eden.listings.rent.post>;

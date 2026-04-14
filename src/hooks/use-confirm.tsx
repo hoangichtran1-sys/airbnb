@@ -34,6 +34,7 @@ export const useConfirm = (
             onOpenChange={handleClose}
             title={title}
             description={description}
+            isSeparator={false}
         >
             <div className="pt-4 w-full flex flex-col-reverse gap-y-2 lg:flex-row gap-x-2 items-center justify-end">
                 <Button
@@ -43,7 +44,11 @@ export const useConfirm = (
                 >
                     Cancel
                 </Button>
-                <Button onClick={handleConfirm} className="w-full lg:w-auto">
+                <Button
+                    variant="tertiary"
+                    onClick={handleConfirm}
+                    className="w-full lg:w-auto"
+                >
                     Confirm
                 </Button>
             </div>

@@ -35,6 +35,16 @@ export const auth = betterAuth({
     advanced: {
         cookiePrefix: "airbnb-app",
     },
+    user: {
+        additionalFields: {
+            lang: {
+                type: "string",
+                required: false,
+                input: true,
+                defaultValue: "en",
+            },
+        },
+    },
     //trustedOrigins: [env.APP_URL],
 });
 

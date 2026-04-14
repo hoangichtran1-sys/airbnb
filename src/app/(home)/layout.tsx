@@ -8,7 +8,7 @@ const Layout = ({ children }: LayoutProps) => {
     return (
         <>
             <Navbar />
-            {children}
+            <div className="pb-20 pt-28">{children}</div>
         </>
     );
 };

@@ -1,8 +1,6 @@
-import { useQueryState, parseAsString } from "nuqs";
+import { useQueryStates } from "nuqs";
+import { categoriesFilter } from "../params";
 
 export const useCategoriesFilter = () => {
-    return useQueryState(
-        "category",
-        parseAsString.withDefault("").withOptions({ clearOnDefault: true }),
-    );
+    return useQueryStates(categoriesFilter);
 };

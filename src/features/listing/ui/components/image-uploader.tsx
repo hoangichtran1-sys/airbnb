@@ -58,6 +58,7 @@ export const ImageUploader = ({ value, onChange }: ImageUploaderProps) => {
                                     style={{
                                         objectFit: "cover",
                                     }}
+                                    loading="eager"
                                 />
                             </div>
                         )}

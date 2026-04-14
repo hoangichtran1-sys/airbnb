@@ -7,13 +7,13 @@ import {
 } from "@/components/ui/form";
 import { useFormContext } from "react-hook-form";
 import { RentFormValues } from "../components/rent-modal";
-import { STEPS } from "@/enums/steps";
+import { RENT_STEPS } from "@/enums/steps";
 import { cn } from "@/lib/utils";
 import { Counter } from "../components/counter";
 import { Separator } from "@/components/ui/separator";
 
 interface InfoSectionProps {
-    step: STEPS;
+    step: RENT_STEPS;
 }
 
 export const InfoSection = ({ step }: InfoSectionProps) => {
@@ -23,7 +23,7 @@ export const InfoSection = ({ step }: InfoSectionProps) => {
         <div
             className={cn(
                 "flex flex-col gap-8",
-                step !== STEPS.INFO && "hidden",
+                step !== RENT_STEPS.INFO && "hidden",
             )}
         >
             <Heading

@@ -7,12 +7,12 @@ import {
 } from "@/components/ui/form";
 import { useFormContext } from "react-hook-form";
 import { RentFormValues } from "../components/rent-modal";
-import { STEPS } from "@/enums/steps";
+import { RENT_STEPS } from "@/enums/steps";
 import { cn, formatPrice } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 
 interface PriceSectionProps {
-    step: STEPS;
+    step: RENT_STEPS;
 }
 
 export const PriceSection = ({ step }: PriceSectionProps) => {
@@ -23,7 +23,7 @@ export const PriceSection = ({ step }: PriceSectionProps) => {
         <div
             className={cn(
                 "flex flex-col gap-8",
-                step !== STEPS.PRICE && "hidden",
+                step !== RENT_STEPS.PRICE && "hidden",
             )}
         >
             <Heading

@@ -9,11 +9,11 @@ import { useFormContext } from "react-hook-form";
 import { RentFormValues } from "../components/rent-modal";
 import { categories } from "@/features/categories/ui/components/category-list";
 import { CategoryInput } from "@/features/categories/ui/components/category-input";
-import { STEPS } from "@/enums/steps";
+import { RENT_STEPS } from "@/enums/steps";
 import { cn } from "@/lib/utils";
 
 interface CategorySectionProps {
-    step: STEPS;
+    step: RENT_STEPS;
 }
 
 export const CategorySection = ({ step }: CategorySectionProps) => {
@@ -23,7 +23,7 @@ export const CategorySection = ({ step }: CategorySectionProps) => {
         <div
             className={cn(
                 "flex flex-col gap-8",
-                step !== STEPS.CATEGORY && "hidden",
+                step !== RENT_STEPS.CATEGORY && "hidden",
             )}
         >
             <Heading

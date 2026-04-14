@@ -67,7 +67,7 @@ export const UserMenu = ({ currentUser }: UserMenuProps) => {
                     <DropdownMenuTrigger className="p-4 md:py-1 md:px-2 border border-neutral-200 flex flex-row items-center gap-3 rounded-full cursor-pointer hover:shadow-md transition">
                         <AiOutlineMenu />
                         <div className="hidden md:block">
-                            <AvatarUser currentUser={currentUser} />
+                            <AvatarUser user={currentUser} />
                         </div>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent
@@ -76,16 +76,24 @@ export const UserMenu = ({ currentUser }: UserMenuProps) => {
                     >
                         {currentUser ? (
                             <>
-                                <DropdownMenuItem onClick={() => {}}>
+                                <DropdownMenuItem
+                                    onClick={() => router.push("/trips")}
+                                >
                                     My trips
                                 </DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => {}}>
+                                <DropdownMenuItem
+                                    onClick={() => router.push("/favorites")}
+                                >
                                     My favorites
                                 </DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => {}}>
+                                <DropdownMenuItem
+                                    onClick={() => router.push("/reservations")}
+                                >
                                     My reservations
                                 </DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => {}}>
+                                <DropdownMenuItem
+                                    onClick={() => router.push("/properties")}
+                                >
                                     My properties
                                 </DropdownMenuItem>
                                 <DropdownMenuItem onClick={onOpenRentModal}>

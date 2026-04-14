@@ -8,14 +8,14 @@ import {
 } from "@/components/ui/form";
 import { useFormContext } from "react-hook-form";
 import { RentFormValues } from "../components/rent-modal";
-import { STEPS } from "@/enums/steps";
+import { RENT_STEPS } from "@/enums/steps";
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 
 interface DescriptionSectionProps {
-    step: STEPS;
+    step: RENT_STEPS;
 }
 
 export const DescriptionSection = ({ step }: DescriptionSectionProps) => {
@@ -25,7 +25,7 @@ export const DescriptionSection = ({ step }: DescriptionSectionProps) => {
         <div
             className={cn(
                 "flex flex-col gap-8",
-                step !== STEPS.DESCRIPTION && "hidden",
+                step !== RENT_STEPS.DESCRIPTION && "hidden",
             )}
         >
             <Heading

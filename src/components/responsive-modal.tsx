@@ -22,6 +22,7 @@ interface ResponsiveModalProps {
     children: React.ReactNode;
     open: boolean;
     onOpenChange: (open: boolean) => void;
+    isSeparator?: boolean;
 }
 
 export function ResponsiveModal({
@@ -30,6 +31,7 @@ export function ResponsiveModal({
     children,
     open,
     onOpenChange,
+    isSeparator = true,
 }: ResponsiveModalProps) {
     const isMobile = useIsMobile();
 
@@ -43,7 +45,7 @@ export function ResponsiveModal({
                             <DrawerDescription>{description}</DrawerDescription>
                         )}
                     </DrawerHeader>
-                    <Separator />
+                    {isSeparator && <Separator />}
                     <div className="flex-1 overflow-y-auto p-4 pb-8">
                         {children}
                     </div>
@@ -62,7 +64,7 @@ export function ResponsiveModal({
                         </DialogDescription>
                     )}
                 </DialogHeader>
-                <Separator />
+                {isSeparator && <Separator />}
                 {children}
             </DialogContent>
         </Dialog>

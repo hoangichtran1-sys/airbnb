@@ -3,14 +3,13 @@
 import { ResponsiveModal } from "@/components/responsive-modal";
 import { useRentModal } from "../../hooks/use-rent-modal";
 import { useState } from "react";
-import { STEPS } from "@/enums/steps";
+import { RENT_STEPS } from "@/enums/steps";
 
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "@/components/ui/form";
-import { CountrySelectValue } from "../../types";
 import { useCreateListing } from "../../api/use-create-listing";
 import { toast } from "sonner";
 import { CategorySection } from "../sections/category-section";
@@ -19,28 +18,17 @@ import { InfoSection } from "../sections/info-section";
 import { ImageUploadSection } from "../sections/image-upload-section";
 import { DescriptionSection } from "../sections/description-section";
 import { PriceSection } from "../sections/price-section";
-
-const rentSchema = z.object({
-    category: z.string().min(1, "Category is required"),
-    location: z.custom<CountrySelectValue>().nullable(),
-    guestCount: z.number().int().min(1),
-    roomCount: z.number().int().min(1),
-    bathroomCount: z.number().int().min(1),
-    imageUrl: z.string().min(1, "Image URL is required"),
-    title: z.string().min(1, "Title is required"),
-    description: z.string().min(1, "Description is required"),
-    price: z.coerce.number().min(1),
-});
+import { rentSchema } from "../../schemas";
 
 export type RentFormValues = z.infer<typeof rentSchema>;
 
 const fieldsByStep: Record<number, (keyof RentFormValues)[]> = {
-    [STEPS.CATEGORY]: ["category"],
-    [STEPS.LOCATION]: ["location"],
-    [STEPS.INFO]: ["guestCount", "roomCount", "bathroomCount"],
-    [STEPS.IMAGES]: ["imageUrl"],
-    [STEPS.DESCRIPTION]: ["title", "description"],
-    [STEPS.PRICE]: ["price"],
+    [RENT_STEPS.CATEGORY]: ["category"],
+    [RENT_STEPS.LOCATION]: ["location"],
+    [RENT_STEPS.INFO]: ["guestCount", "roomCount", "bathroomCount"],
+    [RENT_STEPS.IMAGES]: ["imageUrl"],
+    [RENT_STEPS.DESCRIPTION]: ["title", "description"],
+    [RENT_STEPS.PRICE]: ["price"],
 };
 
 export const RentModal = () => {
@@ -63,7 +51,7 @@ export const RentModal = () => {
         shouldUnregister: false,
     });
 
-    const [step, setStep] = useState(STEPS.CATEGORY);
+    const [step, setStep] = useState(RENT_STEPS.CATEGORY);
 
     const createListing = useCreateListing();
 
@@ -95,7 +83,7 @@ export const RentModal = () => {
             {
                 onSuccess: () => {
                     form.reset();
-                    setStep(STEPS.CATEGORY);
+                    setStep(RENT_STEPS.CATEGORY);
                     onCloseRentModal();
                 },
             },
@@ -116,17 +104,18 @@ export const RentModal = () => {
                     <ImageUploadSection step={step} />
                     <DescriptionSection step={step} />
                     <PriceSection step={step} />
-                    <div className="mt-8 flex flex-col  md:flex-row gap-3">
+                    <div className="mt-8 flex flex-col md:flex-row gap-3">
                         <Button
+                            key="back-btn"
                             type="button"
                             onClick={onBack}
                             variant="outline"
                             className="w-full md:w-1/2"
-                            disabled={step === STEPS.CATEGORY}
+                            disabled={step === RENT_STEPS.CATEGORY}
                         >
                             Back
                         </Button>
-                        {step !== STEPS.PRICE ? (
+                        {step !== RENT_STEPS.PRICE ? (
                             <Button
                                 key="next-btn"
                                 type="button"

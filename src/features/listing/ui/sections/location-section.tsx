@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/form";
 import { useFormContext } from "react-hook-form";
 import { RentFormValues } from "../components/rent-modal";
-import { STEPS } from "@/enums/steps";
+import { RENT_STEPS } from "@/enums/steps";
 import { cn } from "@/lib/utils";
 import { CountrySelect } from "../components/country-select";
 import dynamic from "next/dynamic";
@@ -15,13 +15,11 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 const Map = dynamic(() => import("../components/map").then((mod) => mod.Map), {
     ssr: false,
-    loading: () => {
-        <Skeleton className="w-full h-auto" />;
-    },
+    loading: () => <Skeleton className="w-full h-auto" />,
 });
 
 interface LocationSectionProps {
-    step: STEPS;
+    step: RENT_STEPS;
 }
 
 export const LocationSection = ({ step }: LocationSectionProps) => {
@@ -32,7 +30,7 @@ export const LocationSection = ({ step }: LocationSectionProps) => {
         <div
             className={cn(
                 "flex flex-col gap-8",
-                step !== STEPS.LOCATION && "hidden"
+                step !== RENT_STEPS.LOCATION && "hidden",
             )}
         >
             <Heading
@@ -54,7 +52,7 @@ export const LocationSection = ({ step }: LocationSectionProps) => {
                     </FormItem>
                 )}
             />
-            {step === STEPS.LOCATION && <Map center={location?.latlng} />}
+            {step === RENT_STEPS.LOCATION && <Map center={location?.latlng} />}
         </div>
     );
 };

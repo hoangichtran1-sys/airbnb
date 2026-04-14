@@ -7,12 +7,12 @@ import {
 } from "@/components/ui/form";
 import { useFormContext } from "react-hook-form";
 import { RentFormValues } from "../components/rent-modal";
-import { STEPS } from "@/enums/steps";
+import { RENT_STEPS } from "@/enums/steps";
 import { cn } from "@/lib/utils";
 import { ImageUploader } from "../components/image-uploader";
 
 interface ImageUploadSectionProps {
-    step: STEPS;
+    step: RENT_STEPS;
 }
 
 export const ImageUploadSection = ({ step }: ImageUploadSectionProps) => {
@@ -22,7 +22,7 @@ export const ImageUploadSection = ({ step }: ImageUploadSectionProps) => {
         <div
             className={cn(
                 "flex flex-col gap-8",
-                step !== STEPS.IMAGES && "hidden",
+                step !== RENT_STEPS.IMAGES && "hidden",
             )}
         >
             <Heading

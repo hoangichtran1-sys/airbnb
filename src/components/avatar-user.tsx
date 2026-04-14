@@ -4,12 +4,12 @@ import { GeneratedAvatar } from "./generated-avatar";
 import { User } from "@/lib/auth";
 
 interface AvatarUserProps {
-    currentUser: User | null;
+    user: User | null;
 }
 
-export const AvatarUser = ({ currentUser }: AvatarUserProps) => {
+export const AvatarUser = ({ user }: AvatarUserProps) => {
     
-    if (!currentUser) {
+    if (!user) {
         return (
             <Image
                 className="rounded-full"
@@ -24,12 +24,12 @@ export const AvatarUser = ({ currentUser }: AvatarUserProps) => {
 
     return (
         <>
-            {currentUser.image ? (
+            {user.image ? (
                 <Avatar>
-                    <AvatarImage src={currentUser.image} />
+                    <AvatarImage src={user.image} />
                 </Avatar>
             ) : (
-                <GeneratedAvatar seed={currentUser.name || currentUser.email} />
+                <GeneratedAvatar seed={user.name || user.email} />
             )}
         </>
     );

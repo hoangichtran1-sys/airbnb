@@ -18,12 +18,14 @@ model User {
   email         String
   emailVerified Boolean   @default(false)
   image         String?
+  lang          String?   @default("en")
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
   sessions      Session[]
   accounts      Account[]
   listings      Listing[]
+  favorites     Favorite[]
   reservations  Reservation[]
 
   @@unique([email])
@@ -92,6 +94,7 @@ model Listing {
   price         Float
 
   user          User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  favorites     Favorite[]
   reservations  Reservation[]
 
   createdAt     DateTime @default(now())
@@ -99,6 +102,24 @@ model Listing {
 
 
   @@index([userId])
+  @@index([category])
+  @@index([locationValue])
+}
+
+model Favorite {
+  id        String @id @default(uuid())
+  userId    String
+  listingId String
+
+  user      User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  listing   Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([listingId])
+  @@unique([userId, listingId])
 }
 
 model Reservation {
@@ -107,7 +128,7 @@ model Reservation {
   listingId  String
   startDate  DateTime
   endDate    DateTime
-  totalPrice Int
+  totalPrice Float
 
   user       User @relation(fields: [userId], references: [id], onDelete: Cascade)
   listing    Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
@@ -118,5 +139,5 @@ model Reservation {
   @@index([userId])
   @@index([listingId])
   @@index([listingId, startDate])
-  @@unique([userId, listingId])
+  @@index([listingId, endDate])
 }

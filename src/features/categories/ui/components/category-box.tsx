@@ -13,11 +13,13 @@ export const CategoryBox = ({
     icon: Icon,
     selected,
 }: CategoryBoxProps) => {
-    const [, setFilter] = useCategoriesFilter();
+    const [, setFilterCategories] = useCategoriesFilter();
 
     return (
         <div
-            onClick={() => setFilter(label)}
+            onClick={() =>
+                setFilterCategories({ category: label === "All" ? "" : label })
+            }
             className={cn(
                 "flex flex-col items-center justify-center gap-2 p-3 border-b-2 hover:text-neutral-800 transition cursor-pointer",
                 selected

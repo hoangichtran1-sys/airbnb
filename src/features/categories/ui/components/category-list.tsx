@@ -14,6 +14,7 @@ import {
     GiBarn,
 } from "react-icons/gi";
 import { MdOutlineVilla } from "react-icons/md";
+import { BiCategory } from "react-icons/bi";
 import { LuGrape } from "react-icons/lu";
 import { IoDiamond } from "react-icons/io5";
 import { FaSkiing } from "react-icons/fa";
@@ -21,6 +22,7 @@ import { BsSnow } from "react-icons/bs";
 import { CategoryBox } from "./category-box";
 import { usePathname } from "next/navigation";
 import { useCategoriesFilter } from "../../hooks/use-categories-filter";
+import { Sort } from "@/features/sort/ui/components/sort";
 
 export const categories = [
     {
@@ -108,7 +110,7 @@ export const categories = [
 export const CategoryList = () => {
     const pathname = usePathname();
 
-    const [filter] = useCategoriesFilter();
+    const [filterCategories] = useCategoriesFilter();
 
     const isMainPage = pathname === "/";
 
@@ -119,14 +121,22 @@ export const CategoryList = () => {
     return (
         <Container>
             <div className="pt-4 flex flex-row items-center justify-between overflow-x-auto">
+                <CategoryBox
+                    label="All"
+                    icon={BiCategory}
+                    selected={filterCategories.category === ""}
+                />
                 {categories.map((item) => (
                     <CategoryBox
                         key={item.label}
                         label={item.label}
                         icon={item.icon}
-                        selected={filter === item.label}
+                        selected={filterCategories.category === item.label}
                     />
                 ))}
+                <div className="gap-2">
+                    <Sort />
+                </div>
             </div>
         </Container>
     );

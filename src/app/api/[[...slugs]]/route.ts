@@ -1,6 +1,9 @@
-import { BusinessError } from "@/config/error";
-import { listingRouter } from "@/features/listing/server/routers";
 import { Elysia } from "elysia";
+import { BusinessError } from "@/config/error";
+
+import { favoriteRouter } from "@/features/favorites/server/routers";
+import { listingRouter } from "@/features/listing/server/routers";
+import { reservationRouter } from "@/features/reservations/server/routers";
 
 const app = new Elysia({ prefix: "/api", name: "base-router" })
     .error({
@@ -13,14 +16,21 @@ const app = new Elysia({ prefix: "/api", name: "base-router" })
                     message: error.message,
                     code: error.error_code,
                 });
+            case "VALIDATION":
+                return status(422, {
+                    message: error.message,
+                    code: "VALIDATE_FIELDS_ERROR",
+                });
             default:
-                throw error;
+                return status(500, {
+                    message: "Something went wrong",
+                    code: "INTERNAL_SERVER_ERROR",
+                });
         }
     })
     .use(listingRouter)
-    .get("/health", () => {
-        return { status: "ok" };
-    });
+    .use(favoriteRouter)
+    .use(reservationRouter);
 
 export const GET = app.fetch;
 export const POST = app.fetch;

@@ -5,6 +5,7 @@ import { UserMenu } from "./user-menu";
 import { getCurrentUser } from "@/lib/auth-utils";
 import { CategoryList } from "@/features/categories/ui/components/category-list";
 import { RentModal } from "@/features/listing/ui/components/rent-modal";
+import { SearchModal } from "@/features/search/ui/components/search-modal";
 
 export const Navbar = async () => {
     const currentUser = await getCurrentUser();
@@ -12,6 +13,7 @@ export const Navbar = async () => {
     return (
         <>
             <RentModal />
+            <SearchModal />
             <div className="fixed w-full bg-white z-10 shadow-sm">
                 <div className="p-4 border-b">
                     <Container>

@@ -4,7 +4,6 @@ import React from "react";
 import {
     Tooltip,
     TooltipContent,
-    TooltipProvider,
     TooltipTrigger,
 } from "./ui/tooltip";
 import { cn } from "@/lib/utils";
@@ -25,21 +24,19 @@ export const Hint = ({
     className,
 }: HintProps) => {
     return (
-        <TooltipProvider delayDuration={300}>
-            <Tooltip>
-                <TooltipTrigger asChild>{children}</TooltipTrigger>
-                <TooltipContent
-                    className={cn(
-                        "bg-rose-500 text-white shadow-lg",
-                        className,
-                    )}
-                    side={side}
-                    align={align}
-                    sideOffset={5}
-                >
-                    <span className="text-xs font-medium">{text}</span>
-                </TooltipContent>
-            </Tooltip>
-        </TooltipProvider>
+        <Tooltip>
+            <TooltipTrigger asChild>{children}</TooltipTrigger>
+            <TooltipContent
+                className={cn(
+                    "text-white shadow-lg",
+                    className,
+                )}
+                side={side}
+                align={align}
+                sideOffset={5}
+            >
+                <span className="text-xs font-medium">{text}</span>
+            </TooltipContent>
+        </Tooltip>
     );
 };

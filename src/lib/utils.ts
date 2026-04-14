@@ -11,3 +11,9 @@ export function formatPrice(price: number) {
         currency: "USD",
     }).format(price);
 }
+
+export function snakeCaseToTitle(str: string) {
+    return str
+        .replace(/_/g, " ")
+        .replace(/\b\w/g, (char) => char.toUpperCase());
+}
