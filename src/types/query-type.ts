@@ -7,10 +7,10 @@ export const QUERY_RESERVATIONS = {
 export type QueryReservations =
     (typeof QUERY_RESERVATIONS)[keyof typeof QUERY_RESERVATIONS];
 
-export const Query_Listings = {
+export const QUERY_LISTINGS = {
     ALL: "all",
     BY_USER: "by_user",
 } as const;
 
 export type QueryListings =
-    (typeof Query_Listings)[keyof typeof Query_Listings];
+    (typeof QUERY_LISTINGS)[keyof typeof QUERY_LISTINGS];

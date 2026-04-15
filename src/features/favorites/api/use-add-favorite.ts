@@ -30,6 +30,7 @@ export const useAddFavorite = () => {
         onSuccess: (data) => {
             toast.success("Added this favorite for listing");
             queryClient.invalidateQueries({ queryKey: ["listings"] });
+            queryClient.invalidateQueries({ queryKey: ["reservations"] });
             queryClient.invalidateQueries({ queryKey: ["listings-favorite"] });
             queryClient.invalidateQueries({
                 queryKey: ["listing", data.listingId],

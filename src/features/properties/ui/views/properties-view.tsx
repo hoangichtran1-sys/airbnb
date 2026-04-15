@@ -1,6 +1,11 @@
+"use client";
+
 import { Container } from "@/components/container";
 import { Heading } from "@/components/heading";
-import { ListingCard } from "@/features/listing/ui/components/listing-card";
+import {
+    ListingCard,
+    ListingCardSkeleton,
+} from "@/features/listing/ui/components/listing-card";
 import { ResponseType as ListingsResponse } from "@/features/listing/api/use-get-listings";
 import { useConfirm } from "@/hooks/use-confirm";
 import { useState } from "react";
@@ -57,5 +62,18 @@ export const PropertiesView = ({ listings }: PropertiesViewProps) => {
                 </div>
             </Container>
         </>
+    );
+};
+
+export const PropertiesViewSkeleton = () => {
+    return (
+        <Container>
+            <Heading title="Properties" subtitle="List of your properties" />
+            <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-8">
+                {Array.from({ length: 8 }).map((_, i) => (
+                    <ListingCardSkeleton hasAction key={i} />
+                ))}
+            </div>
+        </Container>
     );
 };

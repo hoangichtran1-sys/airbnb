@@ -40,8 +40,8 @@ export const ImageUploader = ({ value, onChange }: ImageUploaderProps) => {
                 return (
                     <div
                         onClick={(e) => {
-	                   e.stopPropagation();
-                           open();
+                            e.stopPropagation();
+                            open();
                         }}
                         className="relative cursor-pointer hover:opacity-70 transition border-dashed border-2 p-20 border-neutral-300 flex flex-col justify-center items-center gap-4 text-neutral-600"
                     >
@@ -59,6 +59,7 @@ export const ImageUploader = ({ value, onChange }: ImageUploaderProps) => {
                                         objectFit: "cover",
                                     }}
                                     loading="eager"
+                                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                                 />
                             </div>
                         )}

@@ -24,6 +24,10 @@ export const auth = betterAuth({
             clientId: env.GOOGLE_CLIENT_ID,
             clientSecret: env.GOOGLE_CLIENT_SECRET,
         },
+        twitter: {
+            clientId: env.TWITTER_CLIENT_ID,
+            clientSecret: env.TWITTER_CLIENT_SECRET,
+        },
     },
     account: {
         accountLinking: {

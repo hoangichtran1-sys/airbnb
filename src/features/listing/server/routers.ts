@@ -6,7 +6,7 @@ import { auth } from "@/lib/auth";
 import { BusinessError } from "@/config/error";
 import { ErrorCode } from "@/enums/error-code";
 import { Prisma } from "@/generated/prisma/client";
-import { sortMap, sortValues } from "@/types/sort-type";
+import { sortMap } from "@/types/sort-type";
 
 export const listingRouter = new Elysia({
     prefix: "/listings",
@@ -57,7 +57,7 @@ export const listingRouter = new Elysia({
                     },
                 },
                 include: {
-                    favorites: { where: { userId: user.id } },
+                    favorites: true,
                     _count: {
                         select: { favorites: true },
                     },
@@ -97,7 +97,7 @@ export const listingRouter = new Elysia({
     )
     .delete(
         "/:listingId",
-        async ({ user, params: { listingId }, status }) => {
+        async ({ user, params: { listingId } }) => {
             const ownListing = await prisma.listing.findFirst({
                 where: {
                     id: listingId,
@@ -109,11 +109,11 @@ export const listingRouter = new Elysia({
                 throw new BusinessError("Forbidden", 403, ErrorCode.FORBIDDEN);
             }
 
-            await prisma.listing.delete({
+            const listingDeleted = await prisma.listing.delete({
                 where: { id: listingId },
             });
 
-            return status(204);
+            return listingDeleted;
         },
         { isAuth: true, params: t.Object({ listingId: t.String() }) },
     )
@@ -134,6 +134,14 @@ export const listingRouter = new Elysia({
 
             const session = await auth.api.getSession({ headers });
             const userId = session?.user?.id;
+
+            if (queryType === "by_user" && !userId) {
+                throw new BusinessError(
+                    "Unauthorized",
+                    401,
+                    ErrorCode.UNAUTHORIZED,
+                );
+            }
 
             if ((startDate && !endDate) || (!startDate && endDate)) {
                 throw new BusinessError(

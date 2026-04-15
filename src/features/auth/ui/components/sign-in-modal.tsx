@@ -15,11 +15,13 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { FaFacebookF } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
+import { BsTwitterX } from "react-icons/bs";
 import { useLoginModal } from "../../hooks/use-login-modal";
 import { useRegisterModal } from "../../hooks/use-register-modal";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useMemo } from "react";
 
 interface SignInModalProps {
     open: boolean;
@@ -34,6 +36,13 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 
 export const SignInModal = ({ open, onOpenChange }: SignInModalProps) => {
     const router = useRouter();
+    const pathname = usePathname();
+    const query = useSearchParams();
+
+    const currentUrl = useMemo(() => {
+        const queryString = query.toString();
+        return queryString ? `${pathname}?${queryString}` : pathname;
+    }, [pathname, query]);
 
     const { onCloseLoginModal } = useLoginModal();
     const { onOpenRegisterModal } = useRegisterModal();
@@ -51,13 +60,13 @@ export const SignInModal = ({ open, onOpenChange }: SignInModalProps) => {
             {
                 email: values.email,
                 password: values.password,
-                callbackURL: "/",
+                callbackURL: currentUrl,
             },
             {
                 onSuccess: () => {
                     toast.success("Login successfully");
                     onCloseLoginModal();
-                    router.push("/");
+                    router.replace(currentUrl);
                 },
                 onError: (ctx) => {
                     toast.error(ctx.error.message);
@@ -66,11 +75,11 @@ export const SignInModal = ({ open, onOpenChange }: SignInModalProps) => {
         );
     };
 
-    const onSocial = (provider: "google" | "facebook") => {
+    const onSocial = (provider: "google" | "facebook" | "twitter") => {
         authClient.signIn.social(
             {
                 provider: provider,
-                callbackURL: "/",
+                callbackURL: currentUrl,
             },
             {
                 onSuccess: () => {
@@ -141,7 +150,7 @@ export const SignInModal = ({ open, onOpenChange }: SignInModalProps) => {
                                 </Button>
                             </div>
                             <Separator />
-                            <div className="flex flex-col gap-4">
+                            <div className="flex flex-col items-center gap-4">
                                 <Button
                                     className="w-full"
                                     variant="outline"
@@ -161,6 +170,16 @@ export const SignInModal = ({ open, onOpenChange }: SignInModalProps) => {
                                 >
                                     <FaFacebookF className="text-blue-500" />
                                     Continue with Facebook
+                                </Button>
+                                <Button
+                                    className="w-full"
+                                    variant="outline"
+                                    type="button"
+                                    disabled={isPending}
+                                    onClick={() => onSocial("twitter")}
+                                >
+                                    <BsTwitterX />
+                                    Continue with Twitter
                                 </Button>
                             </div>
                         </div>

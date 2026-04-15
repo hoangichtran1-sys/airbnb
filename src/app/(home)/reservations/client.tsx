@@ -5,20 +5,11 @@ import { useGetReservations } from "@/features/reservations/api/use-get-reservat
 import { ReservationsView } from "@/features/reservations/ui/views/reservations-view";
 
 export const Client = () => {
-    const {
-        data: reservations,
-        isLoading: isLoadingReservations,
-        isError: isErrorReservations,
-        error: errorReservations,
-    } = useGetReservations({
+    const { data: reservations } = useGetReservations({
         queryType: "by_author",
     });
 
-    if (isLoadingReservations) return <p>Loading...</p>;
-
-    if (isErrorReservations) return <p>{errorReservations.message}</p>;
-
-    if (!reservations || reservations.length === 0) {
+    if (reservations.length === 0) {
         return (
             <EmptyState
                 title="No reservations found"

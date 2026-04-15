@@ -3,12 +3,12 @@ import { ErrorResponse } from "@/types/error-response";
 import { QueryListings } from "@/types/query-type";
 import { ListingsSort } from "@/types/sort-type";
 import { Treaty } from "@elysiajs/eden";
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 
 export type ResponseType = Treaty.Data<typeof eden.listings.get>;
 
 interface UseGetListingsProps {
-    queryType?: QueryListings;
+    queryType: QueryListings;
     category?: string;
     guestCount?: number | null;
     roomCount?: number | null;
@@ -17,10 +17,45 @@ interface UseGetListingsProps {
     startDate?: Date | null;
     endDate?: Date | null;
     sort?: ListingsSort;
+    headers?: HeadersInit;
 }
 
+export const getListings = async ({
+    queryType,
+    category,
+    guestCount,
+    roomCount,
+    bathroomCount,
+    locationValue,
+    startDate,
+    endDate,
+    sort,
+    headers,
+}: UseGetListingsProps) => {
+    const { data, error } = await eden.listings.get({
+        query: {
+            queryType,
+            category,
+            guestCount,
+            roomCount,
+            bathroomCount,
+            locationValue,
+            startDate,
+            endDate,
+            sort,
+        },
+        headers,
+    });
+
+    if (error) {
+        throw error.value;
+    }
+
+    return data;
+};
+
 export const useGetListings = ({
-    queryType = "all",
+    queryType,
     category,
     guestCount,
     roomCount,
@@ -30,7 +65,7 @@ export const useGetListings = ({
     endDate,
     sort,
 }: UseGetListingsProps) => {
-    const query = useQuery<ResponseType, ErrorResponse>({
+    const query = useSuspenseQuery<ResponseType, ErrorResponse>({
         queryKey: [
             "listings",
             queryType,
@@ -43,27 +78,18 @@ export const useGetListings = ({
             endDate,
             sort,
         ],
-        queryFn: async () => {
-            const { data, error } = await eden.listings.get({
-                query: {
-                    category,
-                    queryType,
-                    guestCount,
-                    roomCount,
-                    bathroomCount,
-                    locationValue,
-                    startDate,
-                    endDate,
-                    sort,
-                },
-            });
-
-            if (error) {
-                throw error.value;
-            }
-
-            return data;
-        },
+        queryFn: () =>
+            getListings({
+                queryType,
+                category,
+                guestCount,
+                roomCount,
+                bathroomCount,
+                locationValue,
+                startDate,
+                endDate,
+                sort,
+            }),
     });
 
     return query;

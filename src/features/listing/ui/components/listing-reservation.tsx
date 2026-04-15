@@ -3,6 +3,7 @@ import { formatPrice } from "@/lib/utils";
 import { Range } from "react-date-range";
 import { Calendar } from "./calendar";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface ListingReservationProps {
     price: number;
@@ -49,6 +50,49 @@ export const ListingReservation = ({
             <div className="p-4 flex flex-row items-center justify-between font-semibold text-lg">
                 <p>Total</p>
                 <p>{formatPrice(totalPrice)}</p>
+            </div>
+        </div>
+    );
+};
+
+export const ListingReservationSkeleton = () => {
+    return (
+        <div className="bg-white rounded-xl border border-neutral-200 overflow-hidden">
+            {/* PRICE */}
+            <div className="flex items-center gap-2 p-4">
+                <Skeleton className="h-7 w-25" />
+                <Skeleton className="h-4 w-15" />
+            </div>
+
+            <Separator />
+
+            {/* CALENDAR */}
+            <div className="p-4 space-y-3">
+                {/* Calendar header */}
+                <div className="flex justify-between items-center">
+                    <Skeleton className="h-4 w-30" />
+                    <Skeleton className="h-4 w-15" />
+                </div>
+
+                {/* Calendar grid (fake) */}
+                <div className="grid grid-cols-7 gap-2">
+                    {Array.from({ length: 35 }).map((_, i) => (
+                        <Skeleton key={i} className="h-8 w-full rounded-md" />
+                    ))}
+                </div>
+            </div>
+
+            <Separator />
+
+            {/* BUTTON */}
+            <div className="p-4">
+                <Skeleton className="h-10 w-full rounded-md" />
+            </div>
+
+            {/* TOTAL */}
+            <div className="p-4 flex items-center justify-between">
+                <Skeleton className="h-5 w-15" />
+                <Skeleton className="h-5 w-25" />
             </div>
         </div>
     );

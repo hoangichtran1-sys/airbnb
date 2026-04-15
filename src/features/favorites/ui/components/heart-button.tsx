@@ -13,7 +13,7 @@ interface HeartButtonProps {
 export const HeartButton = ({ isFavorited, listingId }: HeartButtonProps) => {
     const addFavorite = useAddFavorite();
     const removeFavorite = useRemoveFavorite();
-
+    console.log(isFavorited);
     const toggleFavorite = (e: React.MouseEvent<HTMLDivElement>) => {
         e.stopPropagation();
 

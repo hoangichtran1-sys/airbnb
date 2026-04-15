@@ -1,3 +1,5 @@
+"use client";
+
 import { Reservation } from "@/generated/prisma/client";
 import { useRouter } from "next/navigation";
 import { useCountries } from "../../hooks/use-countries";
@@ -9,6 +11,7 @@ import { formatPrice } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { ResponseType as ListingsResponse } from "../../api/use-get-listings";
 import { AiFillHeart } from "react-icons/ai";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface ListingCardProps {
     data: ListingsResponse[number];
@@ -72,10 +75,11 @@ export const ListingCard = ({
                         className="object-cover h-full w-full group-hover:scale-110 transition"
                         fill
                         loading="eager"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
                     <div className="absolute top-3 right-3">
                         <HeartButton
-                            isFavorited={data.favorites?.length > 0}
+                            isFavorited={(data.favorites ?? []).length > 0}
                             listingId={data.id}
                         />
                     </div>
@@ -109,6 +113,55 @@ export const ListingCard = ({
                     >
                         {actionLabel}
                     </Button>
+                )}
+            </div>
+        </div>
+    );
+};
+
+export const ListingCardSkeleton = ({
+    hasAction = false,
+}: {
+    hasAction?: boolean;
+}) => {
+    return (
+        <div className="col-span-1">
+            <div className="flex flex-col gap-2 w-full">
+                {/* IMAGE */}
+                <div className="aspect-square w-full relative overflow-hidden rounded-xl">
+                    <Skeleton className="w-full h-full" />
+
+                    {/* Heart button */}
+                    <div className="absolute top-3 right-3">
+                        <Skeleton className="h-8 w-8 rounded-full" />
+                    </div>
+                </div>
+
+                {/* LOCATION + FAVORITE COUNT */}
+                <div className="font-semibold text-lg">
+                    <div className="flex flex-row items-center justify-between gap-2">
+                        <Skeleton className="h-5 w-[70%]" />
+                        {!hasAction && (
+                            <div className="flex items-center gap-1">
+                                <Skeleton className="h-4 w-7.5" />
+                                <Skeleton className="h-3 w-3 rounded-sm" />
+                            </div>
+                        )}
+                    </div>
+                </div>
+
+                {/* CATEGORY / DATE */}
+                <Skeleton className="h-4 w-[50%]" />
+
+                {/* PRICE */}
+                <div className="flex items-center gap-2">
+                    <Skeleton className="h-5 w-20" />
+                    {!hasAction && <Skeleton className="h-4 w-12.5" />}
+                </div>
+
+                {/* ACTION BUTTON */}
+                {hasAction && (
+                    <Skeleton className="h-8 w-full rounded-md mt-2" />
                 )}
             </div>
         </div>

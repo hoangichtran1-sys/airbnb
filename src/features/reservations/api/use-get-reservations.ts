@@ -9,7 +9,28 @@ export type ResponseType = Treaty.Data<typeof eden.reservations.get>;
 interface UseGetReservationsProps {
     listingId?: string;
     queryType: QueryReservations;
+    headers?: HeadersInit;
 }
+
+export const getReservations = async ({
+    listingId,
+    queryType,
+    headers,
+}: UseGetReservationsProps) => {
+    const { data, error } = await eden.reservations.get({
+        query: {
+            listingId,
+            queryType,
+        },
+        headers,
+    });
+
+    if (error) {
+        throw error.value;
+    }
+
+    return data;
+};
 
 export const useGetReservations = ({
     listingId,
@@ -17,20 +38,7 @@ export const useGetReservations = ({
 }: UseGetReservationsProps) => {
     const query = useSuspenseQuery<ResponseType, ErrorResponse>({
         queryKey: ["reservations", listingId, queryType],
-        queryFn: async () => {
-            const { data, error } = await eden.reservations.get({
-                query: {
-                    listingId,
-                    queryType,
-                },
-            });
-
-            if (error) {
-                throw error.value;
-            }
-
-            return data;
-        },
+        queryFn: () => getReservations({ listingId, queryType }),
     });
 
     return query;

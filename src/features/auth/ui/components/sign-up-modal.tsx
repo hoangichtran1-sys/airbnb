@@ -19,7 +19,9 @@ import { useLoginModal } from "../../hooks/use-login-modal";
 import { useRegisterModal } from "../../hooks/use-register-modal";
 import { toast } from "sonner";
 import { authClient } from "@/lib/auth-client";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { BsTwitterX } from "react-icons/bs";
+import { useMemo } from "react";
 
 interface SignInModalProps {
     open: boolean;
@@ -42,6 +44,13 @@ type RegisterFormValues = z.infer<typeof registerSchema>;
 
 export const SignUpModal = ({ open, onOpenChange }: SignInModalProps) => {
     const router = useRouter();
+    const pathname = usePathname();
+    const query = useSearchParams();
+
+    const currentUrl = useMemo(() => {
+        const queryString = query.toString();
+        return queryString ? `${pathname}?${queryString}` : pathname;
+    }, [pathname, query]);
 
     const { onOpenLoginModal } = useLoginModal();
     const { onCloseRegisterModal } = useRegisterModal();
@@ -61,13 +70,13 @@ export const SignUpModal = ({ open, onOpenChange }: SignInModalProps) => {
                 name: values.name,
                 email: values.email,
                 password: values.password,
-                callbackURL: "/",
+                callbackURL: currentUrl,
             },
             {
                 onSuccess: () => {
                     toast.success("Sign up successfully");
                     onCloseRegisterModal();
-                    router.refresh();
+                    router.replace(currentUrl);
                 },
                 onError: (ctx) => {
                     toast.error(ctx.error.message);
@@ -76,11 +85,11 @@ export const SignUpModal = ({ open, onOpenChange }: SignInModalProps) => {
         );
     };
 
-    const onSocial = (provider: "google" | "facebook") => {
+    const onSocial = (provider: "google" | "facebook" | "twitter") => {
         authClient.signIn.social(
             {
                 provider: provider,
-                callbackURL: "/",
+                callbackURL: currentUrl,
             },
             {
                 onSuccess: () => {
@@ -187,7 +196,7 @@ export const SignUpModal = ({ open, onOpenChange }: SignInModalProps) => {
                                 </Button>
                             </div>
                             <Separator />
-                            <div className="flex flex-col gap-4">
+                            <div className="flex flex-col items-center gap-4">
                                 <Button
                                     className="w-full"
                                     variant="outline"
@@ -207,6 +216,16 @@ export const SignUpModal = ({ open, onOpenChange }: SignInModalProps) => {
                                 >
                                     <FaFacebookF className="text-blue-500" />
                                     Continue with Facebook
+                                </Button>
+                                <Button
+                                    className="w-full"
+                                    variant="outline"
+                                    type="button"
+                                    disabled={isPending}
+                                    onClick={() => onSocial("twitter")}
+                                >
+                                    <BsTwitterX />
+                                    Continue with Twitter
                                 </Button>
                             </div>
                         </div>

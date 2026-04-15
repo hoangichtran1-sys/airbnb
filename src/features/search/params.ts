@@ -14,4 +14,4 @@ export const listingsSearchParams = {
     endDate: parseAsIsoDate.withOptions({ clearOnDefault: true }),
 };
 
-export const loadListingsSearchParams = createLoader(listingsSearchParams);
+export const loaderListingsSearchParams = createLoader(listingsSearchParams);

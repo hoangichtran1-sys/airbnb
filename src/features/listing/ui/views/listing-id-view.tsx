@@ -1,13 +1,18 @@
+"use client";
+
 import { ResponseType as ListingResponse } from "../../api/use-get-listing";
 import { useMemo, useState } from "react";
 import { categories } from "@/features/categories/ui/components/category-list";
 import { Container } from "@/components/container";
-import { ListingHead } from "../components/listing-head";
-import { ListingInfo } from "../components/listing-info";
+import { ListingHead, ListingHeaderSkeleton } from "../components/listing-head";
+import { ListingInfo, ListingInfoSkeleton } from "../components/listing-info";
 import { useRouter } from "next/navigation";
 import { eachDayOfInterval, differenceInCalendarDays } from "date-fns";
 import { useCreateReservation } from "@/features/reservations/api/use-create-reservation";
-import { ListingReservation } from "../components/listing-reservation";
+import {
+    ListingReservation,
+    ListingReservationSkeleton,
+} from "../components/listing-reservation";
 import { Range } from "react-date-range";
 import { toast } from "sonner";
 import { ResponseType as ReservationsResponse } from "@/features/reservations/api/use-get-reservations";
@@ -95,7 +100,7 @@ export const ListingIdView = ({
                         imageUrl={listing.imageUrl}
                         locationValue={listing.locationValue}
                         id={listing.id}
-                        isFavorited={listing.favorites.length > 0}
+                        isFavorited={(listing.favorites ?? []).length > 0}
                     />
                     <div className="grid grid-cols-1 md:grid-cols-7 md:gap-10 mt-6">
                         <ListingInfo
@@ -117,6 +122,24 @@ export const ListingIdView = ({
                                 disabled={createReservation.isPending}
                                 disabledDates={disabledDates}
                             />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </Container>
+    );
+};
+
+export const ListingIdViewSkeleton = () => {
+    return (
+        <Container>
+            <div className="max-w-screen-5xl mx-auto">
+                <div className="flex flex-col gap-6">
+                    <ListingHeaderSkeleton />
+                    <div className="grid grid-cols-1 md:grid-cols-7 md:gap-10 mt-6">
+                        <ListingInfoSkeleton />
+                        <div className="order-first mb-10 md:order-last md:col-span-3">
+                            <ListingReservationSkeleton />
                         </div>
                     </div>
                 </div>

@@ -5,33 +5,42 @@ import {
     dehydrate,
     QueryClient,
 } from "@tanstack/react-query";
-import { eden } from "@/lib/rpc";
 import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { QUERY_RESERVATIONS } from "@/types/query-type";
+import { getReservations } from "@/features/reservations/api/use-get-reservations";
+import { EmptyState } from "@/components/empty-state";
+import { TripsViewSkeleton } from "@/features/trips/ui/views/trips-view";
+import { headers } from "next/headers";
 
 const Page = async () => {
     await requireAuth();
 
     const queryClient = new QueryClient();
+    const headerList = await headers();
 
     await queryClient.prefetchQuery({
         queryKey: ["reservations", undefined, QUERY_RESERVATIONS.BY_USER],
-        queryFn: async () => {
-            const { data, error } = await eden.reservations.get({
-                query: { queryType: "by_user" },
-            });
-
-            if (error) throw error.value;
-
-            return data;
-        },
+        queryFn: () =>
+            getReservations({
+                queryType: "by_user",
+                headers: {
+                    cookie: headerList.get("cookie") || "",
+                },
+            }),
     });
 
     return (
         <HydrationBoundary state={dehydrate(queryClient)}>
-            <Suspense fallback={<p>Loading...</p>}>
-                <ErrorBoundary fallback={<p>Error!</p>}>
+            <Suspense fallback={<TripsViewSkeleton />}>
+                <ErrorBoundary
+                    fallback={
+                        <EmptyState
+                            title="Error!"
+                            subtitle="Failed to get listings"
+                        />
+                    }
+                >
                     <Client />
                 </ErrorBoundary>
             </Suspense>

@@ -14,7 +14,7 @@ export const reservationRouter = new Elysia({
     .use(authMacro)
     .delete(
         "/:reservationId",
-        async ({ user, params: { reservationId }, status }) => {
+        async ({ user, params: { reservationId } }) => {
             const canceledReservation = await prisma.reservation.findFirst({
                 where: {
                     id: reservationId,
@@ -32,7 +32,7 @@ export const reservationRouter = new Elysia({
                 },
             });
 
-            return status(204);
+            return canceledReservation;
         },
         {
             isAuth: true,
@@ -46,6 +46,25 @@ export const reservationRouter = new Elysia({
         async ({ query: { listingId, queryType }, request: { headers } }) => {
             const session = await auth.api.getSession({ headers });
             const userId = session?.user?.id;
+
+            if (
+                (queryType === "by_user" || queryType === "by_author") &&
+                !userId
+            ) {
+                throw new BusinessError(
+                    "Unauthorized",
+                    401,
+                    ErrorCode.UNAUTHORIZED,
+                );
+            }
+
+            if (queryType === "by_listing" && !listingId) {
+                throw new BusinessError(
+                    "Listing not found",
+                    404,
+                    ErrorCode.NOT_FOUND,
+                );
+            }
 
             const query: Prisma.ReservationWhereInput = {};
 
@@ -87,7 +106,7 @@ export const reservationRouter = new Elysia({
                     t.Literal("by_listing"),
                     t.Literal("by_user"),
                     t.Literal("by_author"),
-                ])
+                ]),
             }),
         },
     )

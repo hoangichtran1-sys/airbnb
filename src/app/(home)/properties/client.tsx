@@ -5,18 +5,9 @@ import { useGetListings } from "@/features/listing/api/use-get-listings";
 import { PropertiesView } from "@/features/properties/ui/views/properties-view";
 
 export const Client = () => {
-    const {
-        data: listings,
-        isLoading,
-        isError,
-        error,
-    } = useGetListings({ queryType: "by_user" });
+    const { data: listings } = useGetListings({ queryType: "by_user" });
 
-    if (isLoading) return <p>Loading...</p>;
-
-    if (isError) return <p>{error.message}</p>;
-
-    if (!listings || listings.length === 0) {
+    if (listings.length === 0) {
         return (
             <EmptyState
                 title="No listings found"

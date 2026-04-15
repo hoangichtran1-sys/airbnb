@@ -7,10 +7,11 @@ export const Logo = () => {
             <Image
                 src="/logo.png"
                 alt="Logo"
-                className="hidden md:block cursor-pointer"
+                className="hidden md:block cursor-pointer object-contain"
                 width={100}
                 height={100}
                 loading="eager"
+                style={{ height: "auto" }}
             />
         </Link>
     );
