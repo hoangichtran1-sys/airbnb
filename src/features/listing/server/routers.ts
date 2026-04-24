@@ -81,12 +81,23 @@ export const listingRouter = new Elysia({
                     guestCount: body.guestCount,
                     roomCount: body.roomCount,
                     bathroomCount: body.bathroomCount,
+                    bedroomCount: body.bedroomCount,
                     imageUrl: body.imageUrl,
                     title: body.title,
                     description: body.description,
                     price: body.price,
                 },
             });
+
+            if (createdListing) {
+                await prisma.notification.create({
+                    data: {
+                        title: "Add my listing",
+                        content: "You add new listing",
+                        ownerId: user.id,
+                    },
+                });
+            }
 
             return createdListing;
         },
@@ -113,6 +124,14 @@ export const listingRouter = new Elysia({
                 where: { id: listingId },
             });
 
+            await prisma.notification.create({
+                data: {
+                    title: "Remove my listing",
+                    content: "You remove new listing",
+                    ownerId: user.id,
+                },
+            });
+
             return listingDeleted;
         },
         { isAuth: true, params: t.Object({ listingId: t.String() }) },
@@ -125,6 +144,7 @@ export const listingRouter = new Elysia({
                 guestCount,
                 roomCount,
                 bathroomCount,
+                bedroomCount,
                 locationValue,
                 startDate,
                 endDate,
@@ -181,6 +201,10 @@ export const listingRouter = new Elysia({
                 queryListings.bathroomCount = { gte: bathroomCount };
             }
 
+            if (bedroomCount) {
+                queryListings.bedroomCount = { gte: bedroomCount };
+            }
+
             if (locationValue) {
                 queryListings.locationValue = locationValue;
             }
@@ -219,6 +243,7 @@ export const listingRouter = new Elysia({
                 guestCount: t.Optional(t.Union([t.Integer(), t.Null()])),
                 roomCount: t.Optional(t.Union([t.Integer(), t.Null()])),
                 bathroomCount: t.Optional(t.Union([t.Integer(), t.Null()])),
+                bedroomCount: t.Optional(t.Union([t.Integer(), t.Null()])),
                 locationValue: t.Optional(t.Union([t.String(), t.Null()])),
                 startDate: t.Optional(t.Union([t.Date(), t.Null()])),
                 endDate: t.Optional(t.Union([t.Date(), t.Null()])),
@@ -234,4 +259,17 @@ export const listingRouter = new Elysia({
                 queryType: t.Union([t.Literal("all"), t.Literal("by_user")]),
             }),
         },
-    );
+    )
+    .get("/search-with-title", async () => {
+        const listings = await prisma.listing.findMany({
+            select: {
+                id: true,
+                imageUrl: true,
+                title: true,
+                locationValue: true,
+                category: true,
+            },
+        });
+
+        return listings;
+    });

@@ -83,6 +83,24 @@ export const InfoSection = ({ step }: InfoSectionProps) => {
                     </FormItem>
                 )}
             />
+             <Separator />
+            <FormField
+                control={control}
+                name="bedroomCount"
+                render={({ field }) => (
+                    <FormItem>
+                        <FormControl>
+                            <Counter
+                                title="Bedrooms"
+                                subtitle="How many bedrooms dou you have?"
+                                value={field.value}
+                                onChange={(value) => field.onChange(value)}
+                            />
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                )}
+            />
         </div>
     );
 };

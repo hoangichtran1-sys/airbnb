@@ -21,6 +21,7 @@ export const SearchModal = () => {
     const [guestCount, setGuestCount] = useState(1);
     const [roomCount, setRoomCount] = useState(1);
     const [bathroomCount, setBathroomCount] = useState(1);
+    const [bedroomCount, setBedroomCount] = useState(1);
     const [dateRange, setDateRange] = useState<Range>({
         startDate: new Date(),
         endDate: new Date(),
@@ -77,9 +78,11 @@ export const SearchModal = () => {
                 guestCount={guestCount}
                 roomCount={roomCount}
                 bathroomCount={bathroomCount}
+                bedroomCount={bedroomCount}
                 setGuestCount={setGuestCount}
                 setRoomCount={setRoomCount}
                 setBathroomCount={setBathroomCount}
+                setBedroomCount={setBedroomCount}
             />
             <div className="mt-8 flex flex-col md:flex-row gap-3">
                 <Button

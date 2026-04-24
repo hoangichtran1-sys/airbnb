@@ -12,21 +12,43 @@ datasource db {
   provider = "postgresql"
 }
 
-model User {
-  id            String    @id
-  name          String
-  email         String
-  emailVerified Boolean   @default(false)
-  image         String?
-  lang          String?   @default("en")
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+enum PaymentStatus {
+  PENDING
+  PAID
+  REFUNDED
+  CANCELLED
+  FAILED
+}
 
-  sessions      Session[]
-  accounts      Account[]
-  listings      Listing[]
-  favorites     Favorite[]
-  reservations  Reservation[]
+enum ReservationStatus {
+  PENDING
+  CONFIRMED
+  FAILED
+}
+
+enum NotificationStatus {
+  READ
+  UNREAD
+}
+
+model User {
+  id             String    @id
+  name           String
+  email          String
+  emailVerified  Boolean   @default(false)
+  image          String?
+  lang           String?   @default("en")
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  sessions       Session[]
+  accounts       Account[]
+  listings       Listing[]
+  favorites      Favorite[]
+  reservations   Reservation[]
+  bookings       Booking[]
+  stripeCustomer StripeCustomer?
+  notifications  Notification[]
 
   @@unique([email])
   @@map("user")
@@ -88,6 +110,7 @@ model Listing {
   category      String
   roomCount     Int
   bathroomCount Int
+  bedroomCount  Int
   guestCount    Int
   locationValue String
   userId        String
@@ -129,15 +152,67 @@ model Reservation {
   startDate  DateTime
   endDate    DateTime
   totalPrice Float
+  status     ReservationStatus @default(PENDING)
 
   user       User @relation(fields: [userId], references: [id], onDelete: Cascade)
   listing    Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+
+  booking    Booking?
 
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
   @@index([userId])
   @@index([listingId])
+  @@index([status])
   @@index([listingId, startDate])
   @@index([listingId, endDate])
+}
+
+model Booking {
+  id                  String @id @default(uuid())
+  userId              String
+  reservationId       String? @unique
+  status              PaymentStatus @default(PENDING)
+
+  transactionId       String? @unique
+  amountPaid          Float?
+  currency            String        @default("USD")
+  errorMessage        String?
+
+  reservation         Reservation? @relation(fields: [reservationId], references: [id], onDelete: SetNull)
+  user                User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  @@index([userId])
+  @@index([status])
+} 
+
+model StripeCustomer {
+  id               String @id @default(uuid())
+  userId           String @unique
+  stripeCustomerId String @unique
+
+  user             User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model Notification {
+  id        String @id @default(uuid())
+  ownerId   String 
+  title     String
+  content   String?
+  status    NotificationStatus @default(UNREAD)
+
+  owner     User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([ownerId])
+  @@index([status])
 }

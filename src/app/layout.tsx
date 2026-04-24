@@ -5,9 +5,10 @@ import { JotaiProvider } from "@/providers/jotai-provider";
 import { Toaster } from "sonner";
 import { NuqsAdapter } from "nuqs/adapters/next";
 import { QueryProvider } from "@/providers/query-provider";
-import { TooltipProvider } from "@/components/ui/tooltip"
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 import "./globals.css";
+import { ConfettiProvider } from "@/providers/confetti-provider";
 
 const font = Nunito({
     subsets: ["latin"],
@@ -31,9 +32,8 @@ export default function RootLayout({
                         <JotaiProvider>
                             <AuthProvider />
                             <Toaster />
-                            <TooltipProvider>
-                                {children}
-                           </TooltipProvider>
+                            <ConfettiProvider />
+                            <TooltipProvider>{children}</TooltipProvider>
                         </JotaiProvider>
                     </QueryProvider>
                 </NuqsAdapter>

@@ -15,6 +15,17 @@ export const env = createEnv({
         TWITTER_CLIENT_ID: z.string().min(1),
         TWITTER_CLIENT_SECRET: z.string().min(1),
         CLOUDINARY_API_SECRET: z.string().min(1),
+        STRIPE_PUBLIC_KEY: z.string().min(1),
+        STRIPE_SECRET_KEY: z.string().min(1),
+        STRIPE_WEBHOOK_SECRET: z.string().min(1),
+        MAIL_HOST: z.string().min(1),
+        MAIL_PORT: z.coerce.number(),
+        MAIL_SECURE: z
+            .preprocess((val) => val === "true" || val === "1", z.boolean())
+            .default(false),
+        MAIL_USERNAME: z.string().min(1),
+        MAIL_PASSWORD: z.string().min(1),
+        MAIL_FROM_ADDRESS: z.string().min(1),
     },
     experimental__runtimeEnv: {},
     skipValidation: !!process.env.SKIP_ENV_VALIDATION,

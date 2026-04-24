@@ -11,7 +11,12 @@ import { formatPrice } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { ResponseType as ListingsResponse } from "../../api/use-get-listings";
 import { AiFillHeart } from "react-icons/ai";
+import { FaStripeS } from "react-icons/fa";
+import { RiRefund2Fill } from "react-icons/ri";
+import { MdOutlineCancel } from "react-icons/md";
 import { Skeleton } from "@/components/ui/skeleton";
+import { AlertTriangleIcon, CircleCheckIcon, InfoIcon } from "lucide-react";
+import { Hint } from "@/components/hint";
 
 interface ListingCardProps {
     data: ListingsResponse[number];
@@ -20,6 +25,9 @@ interface ListingCardProps {
     disabled?: boolean;
     actionLabel?: string;
     actionId?: string;
+    onCheckout?: (id: string) => void;
+    onRefund?: (id: string) => void;
+    role?: "customer" | "vendor";
 }
 
 export const ListingCard = ({
@@ -29,13 +37,16 @@ export const ListingCard = ({
     disabled,
     actionLabel,
     actionId = "",
+    onCheckout,
+    onRefund,
+    role,
 }: ListingCardProps) => {
     const router = useRouter();
     const { getByValue } = useCountries();
 
     const location = getByValue(data.locationValue);
 
-    const handleCancel = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const handleAction = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.stopPropagation();
 
         if (disabled) {
@@ -43,6 +54,26 @@ export const ListingCard = ({
         }
 
         onAction?.(actionId);
+    };
+
+    const handleCheckout = (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.stopPropagation();
+
+        if (disabled) {
+            return;
+        }
+
+        onCheckout?.(actionId);
+    };
+
+    const handleRefund = (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.stopPropagation();
+
+        if (disabled) {
+            return;
+        }
+
+        onRefund?.(actionId);
     };
 
     const price = useMemo(() => {
@@ -69,6 +100,26 @@ export const ListingCard = ({
         >
             <div className="flex flex-col gap-2 w-full">
                 <div className="aspect-square w-full relative overflow-hidden rounded-xl">
+                    <div className="absolute top-1 -left-2">
+                        {reservation?.status === "FAILED" &&
+                            role === "customer" && (
+                                <Hint text="Please pay within 24 hours or your trip will be automatically canceled.">
+                                    <AlertTriangleIcon className="size-4 text-yellow-500" />
+                                </Hint>
+                            )}
+                        {reservation?.status === "PENDING" &&
+                            role === "customer" && (
+                                <Hint text="Please make payment within 24 hours of placing your order. After that, the order will be marked as failed.">
+                                    <InfoIcon className="size-4 text-blue-500" />
+                                </Hint>
+                            )}
+                        {reservation?.status === "CONFIRMED" &&
+                            role === "customer" && (
+                                <Hint text="The trip has been successfully paid for.">
+                                    <CircleCheckIcon className="size-4 text-green-500" />
+                                </Hint>
+                            )}
+                    </div>
                     <Image
                         alt={data.title}
                         src={data.imageUrl}
@@ -104,14 +155,49 @@ export const ListingCard = ({
                     <div className="font-semibold">{formatPrice(price)}</div>
                     {!reservation && <div className="font-light">/ night</div>}
                 </div>
-                {onAction && actionLabel && (
+                {onAction &&
+                    actionLabel &&
+                    reservation?.status !== "CONFIRMED" && (
+                        <Button
+                            onClick={handleAction}
+                            size="sm"
+                            variant="tertiary"
+                            disabled={disabled}
+                        >
+                            <MdOutlineCancel className="text-white" />
+                            {actionLabel}
+                        </Button>
+                    )}
+                {role === "customer" && reservation?.status !== "CONFIRMED" && (
                     <Button
-                        onClick={handleCancel}
+                        onClick={handleCheckout}
                         size="sm"
-                        variant="tertiary"
+                        variant="checkout"
                         disabled={disabled}
                     >
-                        {actionLabel}
+                        <FaStripeS className="text-white" />
+                        <span>Booking now</span>
+                    </Button>
+                )}
+
+                {role === "customer" && reservation?.status === "CONFIRMED" && (
+                    <Button
+                        onClick={handleRefund}
+                        size="sm"
+                        disabled={disabled}
+                    >
+                        <RiRefund2Fill className="text-white" />
+                        <span>Refund request</span>
+                    </Button>
+                )}
+                {reservation?.status === "CONFIRMED" && role === "vendor" && (
+                    <Button
+                        onClick={handleRefund}
+                        size="sm"
+                        disabled={disabled}
+                    >
+                        <RiRefund2Fill className="text-white" />
+                        <span>Cancel and refund</span>
                     </Button>
                 )}
             </div>

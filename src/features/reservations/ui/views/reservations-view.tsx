@@ -8,6 +8,7 @@ import {
 } from "@/features/listing/ui/components/listing-card";
 import { useCancelReservation } from "@/features/reservations/api/use-cancel-reservation";
 import { ResponseType as ReservationsResponse } from "@/features/reservations/api/use-get-reservations";
+import { useRefundReservation } from "@/features/trips/api/use-refund-reservation";
 import { useConfirm } from "@/hooks/use-confirm";
 import { useState } from "react";
 
@@ -17,8 +18,10 @@ interface ReservationsViewProps {
 
 export const ReservationsView = ({ reservations }: ReservationsViewProps) => {
     const [deletingId, setDeletingId] = useState("");
+    const [refundId, setRefundId] = useState("");
 
     const cancelReservation = useCancelReservation();
+    const refundReservation = useRefundReservation();
 
     const [CancelConfirmation, confirmCancel] = useConfirm(
         "Are you sure?",
@@ -40,6 +43,18 @@ export const ReservationsView = ({ reservations }: ReservationsViewProps) => {
         );
     };
 
+    const onRefund = (id: string) => {
+        setRefundId(id);
+        refundReservation.mutate(
+            { reservationId: id, role: "vendor" },
+            {
+                onSuccess: () => {
+                    setRefundId("");
+                },
+            },
+        );
+    };
+
     return (
         <>
             <CancelConfirmation />
@@ -56,8 +71,13 @@ export const ReservationsView = ({ reservations }: ReservationsViewProps) => {
                             reservation={reservation}
                             actionId={reservation.id}
                             onAction={onCancel}
-                            disabled={deletingId === reservation.id}
+                            disabled={
+                                deletingId === reservation.id ||
+                                refundId === reservation.id
+                            }
                             actionLabel="Cancel guest reservation"
+                            onRefund={onRefund}
+                            role="vendor"
                         />
                     ))}
                 </div>

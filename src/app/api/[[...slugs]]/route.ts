@@ -4,6 +4,7 @@ import { BusinessError } from "@/config/error";
 import { favoriteRouter } from "@/features/favorites/server/routers";
 import { listingRouter } from "@/features/listing/server/routers";
 import { reservationRouter } from "@/features/reservations/server/routers";
+import { notificationRouter } from "@/features/notifications/server/routers";
 
 const app = new Elysia({ prefix: "/api", name: "base-router" })
     .error({
@@ -30,7 +31,8 @@ const app = new Elysia({ prefix: "/api", name: "base-router" })
     })
     .use(listingRouter)
     .use(favoriteRouter)
-    .use(reservationRouter);
+    .use(reservationRouter)
+    .use(notificationRouter);
 
 export const GET = app.fetch;
 export const POST = app.fetch;

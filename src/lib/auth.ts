@@ -33,7 +33,7 @@ export const auth = betterAuth({
         accountLinking: {
             enabled: true,
             allowDifferentEmails: false, // Recommend
-            trustedProviders: ["google", "email-password", "facebook"],
+            trustedProviders: ["google", "email-password", "facebook", "twitter"],
         },
     },
     advanced: {

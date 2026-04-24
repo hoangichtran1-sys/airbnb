@@ -21,6 +21,9 @@ const buttonVariants = cva(
                 link: "text-primary underline-offset-4 hover:underline",
                 tertiary:
                     "bg-rose-500 text-white hover:bg-rose-400 border-rose-500 focus-visible:ring-rose-400 dark:focus-visible:ring-rose-400 dark:ring-rose-400",
+                checkout:
+                    "bg-purple-500 text-white hover:bg-purple-400 border-purple-500 focus-visible:ring-purple-400 dark:focus-visible:ring-purple-400 dark:ring-purple-400",
+                refund: "bg-amber-500 text-white hover:bg-amber-400 border-amber-500 focus-visible:ring-amber-400 dark:focus-visible:ring-amber-400 dark:ring-amber-400",
             },
             size: {
                 default: "h-9 px-4 py-2 has-[>svg]:px-3",

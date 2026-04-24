@@ -1,4 +1,3 @@
-import { requireAuth } from "@/lib/auth-utils";
 import { Client } from "./client";
 import {
     dehydrate,
@@ -14,8 +13,6 @@ import { EmptyState } from "@/components/empty-state";
 import { headers } from "next/headers";
 
 const Page = async () => {
-    await requireAuth();
-
     const queryClient = new QueryClient();
     const headerList = await headers();
 

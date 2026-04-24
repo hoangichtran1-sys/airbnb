@@ -38,6 +38,16 @@ export const favoriteRouter = new Elysia({
                 },
             });
 
+            if (addedFavorite) {
+                await prisma.notification.create({
+                    data: {
+                        title: "Add new favorite",
+                        content: "You add new favorite",
+                        ownerId: user.id,
+                    },
+                });
+            }
+
             return addedFavorite;
         },
         {
@@ -77,6 +87,16 @@ export const favoriteRouter = new Elysia({
                     },
                 },
             });
+
+            if (removedFavorite) {
+                await prisma.notification.create({
+                    data: {
+                        title: "Remove favorite",
+                        content: "You remove favorite",
+                        ownerId: user.id,
+                    },
+                });
+            }
 
             return removedFavorite;
         },

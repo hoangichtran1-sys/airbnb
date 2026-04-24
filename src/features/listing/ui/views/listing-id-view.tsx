@@ -110,6 +110,7 @@ export const ListingIdView = ({
                             guestCount={listing.guestCount}
                             roomCount={listing.roomCount}
                             bathroomCount={listing.bathroomCount}
+                            bedroomCount={listing.bedroomCount}
                             locationValue={listing.locationValue}
                         />
                         <div className="order-first mb-10 md:order-last md:col-span-3">

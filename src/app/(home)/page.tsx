@@ -38,6 +38,7 @@ const Page = async ({ searchParams }: PageProps) => {
             listingsSearch.guestCount,
             listingsSearch.roomCount,
             listingsSearch.bathroomCount,
+            listingsSearch.bedroomCount,
             listingsSearch.locationValue,
             listingsSearch.startDate,
             listingsSearch.endDate,

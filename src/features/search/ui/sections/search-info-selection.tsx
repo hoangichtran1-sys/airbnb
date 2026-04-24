@@ -12,6 +12,8 @@ interface SearchInfoSectionProps {
     setRoomCount: (value: number) => void;
     bathroomCount: number;
     setBathroomCount: (value: number) => void;
+    bedroomCount: number;
+    setBedroomCount: (value: number) => void;
 }
 
 export const SearchInfoSection = ({
@@ -22,6 +24,8 @@ export const SearchInfoSection = ({
     setRoomCount,
     bathroomCount,
     setBathroomCount,
+    bedroomCount,
+    setBedroomCount
 }: SearchInfoSectionProps) => {
     return (
         <div
@@ -53,6 +57,13 @@ export const SearchInfoSection = ({
                 subtitle="How many bathroom do you need?"
                 value={bathroomCount}
                 onChange={setBathroomCount}
+            />
+            <Separator />
+            <Counter
+                title="Bedrooms"
+                subtitle="How many bedroom do you need?"
+                value={bedroomCount}
+                onChange={setBedroomCount}
             />
         </div>
     );

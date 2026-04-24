@@ -1,4 +1,3 @@
-import { requireAuth } from "@/lib/auth-utils";
 import { Client } from "./client";
 import {
     HydrationBoundary,
@@ -14,8 +13,6 @@ import { TripsViewSkeleton } from "@/features/trips/ui/views/trips-view";
 import { headers } from "next/headers";
 
 const Page = async () => {
-    await requireAuth();
-
     const queryClient = new QueryClient();
     const headerList = await headers();
 

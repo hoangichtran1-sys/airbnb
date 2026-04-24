@@ -13,6 +13,7 @@ interface UseGetListingsProps {
     guestCount?: number | null;
     roomCount?: number | null;
     bathroomCount?: number | null;
+    bedroomCount?: number | null;
     locationValue?: string | null;
     startDate?: Date | null;
     endDate?: Date | null;
@@ -26,6 +27,7 @@ export const getListings = async ({
     guestCount,
     roomCount,
     bathroomCount,
+    bedroomCount,
     locationValue,
     startDate,
     endDate,
@@ -39,6 +41,7 @@ export const getListings = async ({
             guestCount,
             roomCount,
             bathroomCount,
+            bedroomCount,
             locationValue,
             startDate,
             endDate,
@@ -60,6 +63,7 @@ export const useGetListings = ({
     guestCount,
     roomCount,
     bathroomCount,
+    bedroomCount,
     locationValue,
     startDate,
     endDate,
@@ -73,6 +77,7 @@ export const useGetListings = ({
             guestCount,
             roomCount,
             bathroomCount,
+            bedroomCount,
             locationValue,
             startDate,
             endDate,
@@ -85,6 +90,7 @@ export const useGetListings = ({
                 guestCount,
                 roomCount,
                 bathroomCount,
+                bedroomCount,
                 locationValue,
                 startDate,
                 endDate,

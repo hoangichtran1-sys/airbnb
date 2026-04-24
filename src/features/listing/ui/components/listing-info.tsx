@@ -18,6 +18,7 @@ interface ListingInfoProps {
     guestCount: number;
     roomCount: number;
     bathroomCount: number;
+    bedroomCount: number;
     category:
         | {
               icon: IconType;
@@ -34,6 +35,7 @@ export const ListingInfo = ({
     guestCount,
     roomCount,
     bathroomCount,
+    bedroomCount,
     category,
     locationValue,
 }: ListingInfoProps) => {
@@ -57,6 +59,10 @@ export const ListingInfo = ({
                     <p>
                         {bathroomCount}{" "}
                         {bathroomCount === 1 ? "bathroom" : "bathrooms"}
+                    </p>
+                     <p>
+                        {bedroomCount}{" "}
+                        {bedroomCount === 1 ? "bedroom" : "bedrooms"}
                     </p>
                 </div>
             </div>

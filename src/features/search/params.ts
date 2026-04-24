@@ -10,6 +10,7 @@ export const listingsSearchParams = {
     guestCount: parseAsInteger.withOptions({ clearOnDefault: true }),
     roomCount: parseAsInteger.withOptions({ clearOnDefault: true }),
     bathroomCount: parseAsInteger.withOptions({ clearOnDefault: true }),
+    bedroomCount: parseAsInteger.withOptions({ clearOnDefault: true }),
     startDate: parseAsIsoDate.withOptions({ clearOnDefault: true }),
     endDate: parseAsIsoDate.withOptions({ clearOnDefault: true }),
 };

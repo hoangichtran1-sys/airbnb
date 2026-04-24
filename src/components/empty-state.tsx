@@ -30,6 +30,7 @@ export const EmptyState = ({
             guestCount: null,
             roomCount: null,
             bathroomCount: null,
+            bedroomCount: null,
         });
         setSortValue({ sort: null });
     };

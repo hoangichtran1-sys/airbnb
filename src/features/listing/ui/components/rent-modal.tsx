@@ -25,7 +25,7 @@ export type RentFormValues = z.infer<typeof rentSchema>;
 const fieldsByStep: Record<number, (keyof RentFormValues)[]> = {
     [RENT_STEPS.CATEGORY]: ["category"],
     [RENT_STEPS.LOCATION]: ["location"],
-    [RENT_STEPS.INFO]: ["guestCount", "roomCount", "bathroomCount"],
+    [RENT_STEPS.INFO]: ["guestCount", "roomCount", "bathroomCount", "bedroomCount"],
     [RENT_STEPS.IMAGES]: ["imageUrl"],
     [RENT_STEPS.DESCRIPTION]: ["title", "description"],
     [RENT_STEPS.PRICE]: ["price"],
@@ -43,6 +43,7 @@ export const RentModal = () => {
             guestCount: 1,
             roomCount: 1,
             bathroomCount: 1,
+            bedroomCount: 1,
             imageUrl: "",
             title: "",
             description: "",

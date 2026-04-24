@@ -6,6 +6,7 @@ import { getCurrentUser } from "@/lib/auth-utils";
 import { CategoryList } from "@/features/categories/ui/components/category-list";
 import { RentModal } from "@/features/listing/ui/components/rent-modal";
 import { SearchModal } from "@/features/search/ui/components/search-modal";
+import { NotificationMenu } from "@/features/notifications/ui/components/notification-menu";
 
 export const Navbar = async () => {
     const currentUser = await getCurrentUser();
@@ -20,7 +21,10 @@ export const Navbar = async () => {
                         <div className="flex flex-row items-center justify-between gap-3 md:gap-0">
                             <Logo />
                             <Search />
-                            <UserMenu currentUser={currentUser} />
+                            <div className="flex flex-row gap-3">
+                                {currentUser && <NotificationMenu />}
+                                 <UserMenu currentUser={currentUser} /> 
+                            </div>
                         </div>
                     </Container>
                 </div>
