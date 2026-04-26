@@ -19,7 +19,7 @@ import { useLoginModal } from "../../hooks/use-login-modal";
 import { useRegisterModal } from "../../hooks/use-register-modal";
 import { toast } from "sonner";
 import { authClient } from "@/lib/auth-client";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { BsTwitterX } from "react-icons/bs";
 import { useMemo } from "react";
 
@@ -45,12 +45,10 @@ type RegisterFormValues = z.infer<typeof registerSchema>;
 export const SignUpModal = ({ open, onOpenChange }: SignInModalProps) => {
     const router = useRouter();
     const pathname = usePathname();
-    const query = useSearchParams();
 
     const currentUrl = useMemo(() => {
-        const queryString = query.toString();
-        return queryString ? `${pathname}?${queryString}` : pathname;
-    }, [pathname, query]);
+        return pathname;
+    }, [pathname]);
 
     const { onOpenLoginModal } = useLoginModal();
     const { onCloseRegisterModal } = useRegisterModal();

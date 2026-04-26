@@ -1,33 +1,42 @@
 import { requireAuth } from "@/lib/auth-utils";
-import { Client } from "./client";
 import {
     dehydrate,
     HydrationBoundary,
     QueryClient,
 } from "@tanstack/react-query";
-import { getListings } from "@/features/listing/api/use-get-listings";
-import { QUERY_LISTINGS } from "@/types/query-type";
 import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { EmptyState } from "@/components/empty-state";
-import { PropertiesViewSkeleton } from "@/features/properties/ui/views/properties-view";
+import {
+    PropertiesView,
+    PropertiesViewSkeleton,
+} from "@/features/properties/ui/views/properties-view";
 import { headers } from "next/headers";
+import { getListingsByOwner } from "@/features/listing/api/use-get-listings-by-owner";
+import { SearchParams } from "nuqs/server";
+import { paginationParamsLoader } from "@/features/properties/params";
 
-const Page = async () => {
+interface PageProps {
+    paginationParams: Promise<SearchParams>;
+}
+
+const Page = async ({ paginationParams }: PageProps) => {
     await requireAuth();
+
+    const params = await paginationParamsLoader(paginationParams);
 
     const queryClient = new QueryClient();
 
     const headerList = await headers();
 
     await queryClient.prefetchQuery({
-        queryKey: ["listings", QUERY_LISTINGS.BY_USER],
+        queryKey: ["listings-by-owner"],
         queryFn: () =>
-            getListings({
-                queryType: "by_user",
+            getListingsByOwner({
                 headers: {
                     cookie: headerList.get("cookie") || "",
                 },
+                ...params,
             }),
     });
 
@@ -42,7 +51,7 @@ const Page = async () => {
                         />
                     }
                 >
-                    <Client />
+                    <PropertiesView />
                 </ErrorBoundary>
             </Suspense>
         </HydrationBoundary>

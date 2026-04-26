@@ -9,7 +9,7 @@ import Image from "next/image";
 import { HeartButton } from "@/features/favorites/ui/components/heart-button";
 import { formatPrice } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { ResponseType as ListingsResponse } from "../../api/use-get-listings";
+import { ListingsResponse } from "../../api/use-get-listings-by-owner";
 import { AiFillHeart } from "react-icons/ai";
 import { FaStripeS } from "react-icons/fa";
 import { RiRefund2Fill } from "react-icons/ri";

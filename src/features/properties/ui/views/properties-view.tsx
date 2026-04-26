@@ -6,17 +6,20 @@ import {
     ListingCard,
     ListingCardSkeleton,
 } from "@/features/listing/ui/components/listing-card";
-import { ResponseType as ListingsResponse } from "@/features/listing/api/use-get-listings";
 import { useConfirm } from "@/hooks/use-confirm";
 import { useState } from "react";
 import { useDeleteListing } from "@/features/listing/api/use-delete-listing";
+import { useGetListingsByOwner } from "@/features/listing/api/use-get-listings-by-owner";
+import { EmptyState } from "@/components/empty-state";
+import { usePaginationParams } from "../../hooks/use-pagination-params";
+import { Pagination } from "@/components/pagination";
 
-interface PropertiesViewProps {
-    listings: ListingsResponse;
-}
-
-export const PropertiesView = ({ listings }: PropertiesViewProps) => {
+export const PropertiesView = () => {
     const [deletingId, setDeletingId] = useState("");
+
+    const [, setParams] = usePaginationParams();
+
+    const { data: listings, isFetching } = useGetListingsByOwner();
 
     const removeListing = useDeleteListing();
 
@@ -40,6 +43,15 @@ export const PropertiesView = ({ listings }: PropertiesViewProps) => {
         );
     };
 
+    if (listings.items.length === 0) {
+        return (
+            <EmptyState
+                title="No listings found"
+                subtitle="Looks like you have no properties."
+            />
+        );
+    }
+
     return (
         <>
             <RemoveConfirmation />
@@ -49,7 +61,7 @@ export const PropertiesView = ({ listings }: PropertiesViewProps) => {
                     subtitle="List of your properties"
                 />
                 <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-8">
-                    {listings.map((listing) => (
+                    {listings.items.map((listing) => (
                         <ListingCard
                             key={listing.id}
                             data={listing}
@@ -60,6 +72,15 @@ export const PropertiesView = ({ listings }: PropertiesViewProps) => {
                         />
                     ))}
                 </div>
+                <Pagination
+                    disabled={isFetching}
+                    totalPages={listings.totalPages}
+                    page={listings.page}
+                    pageSize={listings.pageSize}
+                    onPageChange={(page) => setParams({ page })}
+                    onPageSizeChange={(pageSize) => setParams({ pageSize })}
+                    pageSizeOptions={[5, 10, 20, 50, 100]}
+                />
             </Container>
         </>
     );

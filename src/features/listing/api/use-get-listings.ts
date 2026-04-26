@@ -1,14 +1,12 @@
 import { eden } from "@/lib/rpc";
 import { ErrorResponse } from "@/types/error-response";
-import { QueryListings } from "@/types/query-type";
 import { ListingsSort } from "@/types/sort-type";
 import { Treaty } from "@elysiajs/eden";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useSuspenseInfiniteQuery } from "@tanstack/react-query";
 
 export type ResponseType = Treaty.Data<typeof eden.listings.get>;
 
 interface UseGetListingsProps {
-    queryType: QueryListings;
     category?: string;
     guestCount?: number | null;
     roomCount?: number | null;
@@ -19,10 +17,11 @@ interface UseGetListingsProps {
     endDate?: Date | null;
     sort?: ListingsSort;
     headers?: HeadersInit;
+    limit: number;
+    cursor?: { id: string };
 }
 
 export const getListings = async ({
-    queryType,
     category,
     guestCount,
     roomCount,
@@ -32,11 +31,11 @@ export const getListings = async ({
     startDate,
     endDate,
     sort,
+    limit,
     headers,
 }: UseGetListingsProps) => {
     const { data, error } = await eden.listings.get({
         query: {
-            queryType,
             category,
             guestCount,
             roomCount,
@@ -46,6 +45,7 @@ export const getListings = async ({
             startDate,
             endDate,
             sort,
+            limit,
         },
         headers,
     });
@@ -58,7 +58,6 @@ export const getListings = async ({
 };
 
 export const useGetListings = ({
-    queryType,
     category,
     guestCount,
     roomCount,
@@ -68,11 +67,11 @@ export const useGetListings = ({
     startDate,
     endDate,
     sort,
+    limit,
 }: UseGetListingsProps) => {
-    const query = useSuspenseQuery<ResponseType, ErrorResponse>({
+    const query = useSuspenseInfiniteQuery<ResponseType, ErrorResponse>({
         queryKey: [
             "listings",
-            queryType,
             category,
             guestCount,
             roomCount,
@@ -82,10 +81,10 @@ export const useGetListings = ({
             startDate,
             endDate,
             sort,
+            limit,
         ],
-        queryFn: () =>
+        queryFn: ({ pageParam }) =>
             getListings({
-                queryType,
                 category,
                 guestCount,
                 roomCount,
@@ -95,7 +94,11 @@ export const useGetListings = ({
                 startDate,
                 endDate,
                 sort,
+                limit,
+                cursor: pageParam as { id: string } | undefined,
             }),
+        initialPageParam: undefined,
+        getNextPageParam: (lastPage) => lastPage.nextCursor,
     });
 
     return query;

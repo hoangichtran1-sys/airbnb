@@ -7,6 +7,7 @@ import { BusinessError } from "@/config/error";
 import { ErrorCode } from "@/enums/error-code";
 import { Prisma } from "@/generated/prisma/client";
 import { sortMap } from "@/types/sort-type";
+import { MAX_LIMIT, MIN_LIMIT, PAGINATION } from "@/constant";
 
 export const listingRouter = new Elysia({
     prefix: "/listings",
@@ -148,20 +149,13 @@ export const listingRouter = new Elysia({
                 locationValue,
                 startDate,
                 endDate,
-                queryType,
                 sort,
+                cursor,
+                limit,
             } = query;
 
             const session = await auth.api.getSession({ headers });
             const userId = session?.user?.id;
-
-            if (queryType === "by_user" && !userId) {
-                throw new BusinessError(
-                    "Unauthorized",
-                    401,
-                    ErrorCode.UNAUTHORIZED,
-                );
-            }
 
             if ((startDate && !endDate) || (!startDate && endDate)) {
                 throw new BusinessError(
@@ -183,10 +177,6 @@ export const listingRouter = new Elysia({
 
             if (category) {
                 queryListings.category = category;
-            }
-
-            if (userId && queryType === "by_user") {
-                queryListings.userId = userId;
             }
 
             if (guestCount) {
@@ -218,7 +208,7 @@ export const listingRouter = new Elysia({
                 };
             }
 
-            const listings = await prisma.listing.findMany({
+            const data = await prisma.listing.findMany({
                 where: queryListings,
                 include: {
                     favorites: userId
@@ -233,9 +223,23 @@ export const listingRouter = new Elysia({
                     },
                 },
                 orderBy: sort ? sortMap[sort] : sortMap["newest"],
+                take: limit ? limit + 1 : undefined,
+                ...(cursor && {
+                    cursor: { id: cursor.id },
+                    skip: 1,
+                }),
             });
 
-            return listings;
+            const hasMore = data.length > limit;
+            const items = hasMore ? data.slice(0, -1) : data;
+            const lastItem = items[items.length - 1];
+            const nextCursor = hasMore
+                ? {
+                      id: lastItem.id,
+                  }
+                : null;
+
+            return { items, nextCursor };
         },
         {
             query: t.Object({
@@ -256,7 +260,70 @@ export const listingRouter = new Elysia({
                         t.Literal("price_high"),
                     ]),
                 ),
-                queryType: t.Union([t.Literal("all"), t.Literal("by_user")]),
+                cursor: t.Optional(
+                    t.Union([
+                        t.Object({
+                            id: t.String(),
+                        }),
+                        t.Null(),
+                    ]),
+                ),
+                limit: t.Integer({ minimum: MIN_LIMIT, maximum: MAX_LIMIT }),
+            }),
+        },
+    )
+    .get(
+        "/by-owner",
+        async ({ user, query: { page, pageSize } }) => {
+            const [items, totalCount] = await Promise.all([
+                prisma.listing.findMany({
+                    where: {
+                        userId: user.id,
+                    },
+                    include: {
+                        favorites: {
+                            where: {
+                                userId: user.id,
+                            },
+                        },
+                        _count: {
+                            select: { favorites: true },
+                        },
+                    },
+                    orderBy: [{ createdAt: "desc" }],
+                    skip: (page - 1) * pageSize,
+                    take: pageSize,
+                }),
+                prisma.listing.count({
+                    where: {
+                        userId: user.id,
+                    },
+                }),
+            ]);
+
+            const totalPages = Math.ceil(totalCount / pageSize);
+            const hasNextPage = page < totalPages;
+            const hasPreviousPage = page > 1;
+
+            return {
+                items,
+                page,
+                pageSize,
+                totalCount,
+                totalPages,
+                hasNextPage,
+                hasPreviousPage,
+            };
+        },
+        {
+            isAuth: true,
+            query: t.Object({
+                page: t.Integer({ default: PAGINATION.DEFAULT_PAGE }),
+                pageSize: t.Integer({
+                    minimum: PAGINATION.MIN_PAGE_SIZE,
+                    maximum: PAGINATION.MAX_PAGE_SIZE,
+                    default: PAGINATION.DEFAULT_PAGE_SIZE,
+                }),
             }),
         },
     )

@@ -31,6 +31,7 @@ export const useCreateListing = () => {
         onSuccess: () => {
             toast.success("Listing created");
             queryClient.invalidateQueries({ queryKey: ["listings"] });
+            queryClient.invalidateQueries({ queryKey: ["listings-by-owner"] });
         },
         onError: (error) => {
             toast.error(error.message);

@@ -13,11 +13,11 @@ export const sortValues = Object.values(LISTINGS_SORT);
 export type ListingsSort = (typeof LISTINGS_SORT)[keyof typeof LISTINGS_SORT];
 
 export const sortMap = {
-    newest: [{ createdAt: "desc" }],
-    popular: [{ favorites: { _count: "desc" } }],
-    most_booked: [{ reservations: { _count: "desc" } }],
-    price_low: [{ price: "asc" }],
-    price_high: [{ price: "desc" }],
+    newest: [{ createdAt: "desc" }, { id: "desc" }],
+    popular: [{ favorites: { _count: "desc" } }, { id: "desc" }],
+    most_booked: [{ reservations: { _count: "desc" } }, { id: "desc" }],
+    price_low: [{ price: "asc" }, { id: "desc" }],
+    price_high: [{ price: "desc" }, { id: "desc" }],
 } as const satisfies Record<
     ListingsSort,
     Prisma.ListingOrderByWithRelationInput[]

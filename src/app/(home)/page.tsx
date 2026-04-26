@@ -1,4 +1,5 @@
 import { EmptyState } from "@/components/empty-state";
+import { DEFAULT_LIMIT } from "@/constant";
 import { loaderCategoriesFilter } from "@/features/categories/params";
 import { getListings } from "@/features/listing/api/use-get-listings";
 import {
@@ -7,12 +8,12 @@ import {
 } from "@/features/listing/ui/views/listings-view";
 import { loaderListingsSearchParams } from "@/features/search/params";
 import { loaderListingsSortParams } from "@/features/sort/params";
-import { QUERY_LISTINGS } from "@/types/query-type";
 import {
     HydrationBoundary,
     QueryClient,
     dehydrate,
 } from "@tanstack/react-query";
+import { headers } from "next/headers";
 import type { SearchParams } from "nuqs/server";
 import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
@@ -28,12 +29,13 @@ const Page = async ({ searchParams }: PageProps) => {
     const listingsSearch = loaderListingsSearchParams(sq);
     const listingsSort = loaderListingsSortParams(sq);
 
+    const headerList = await headers();
+
     const queryClient = new QueryClient();
 
-    await queryClient.prefetchQuery({
+    await queryClient.prefetchInfiniteQuery({
         queryKey: [
             "listings",
-            QUERY_LISTINGS.ALL,
             categoriesFilter.category,
             listingsSearch.guestCount,
             listingsSearch.roomCount,
@@ -43,14 +45,20 @@ const Page = async ({ searchParams }: PageProps) => {
             listingsSearch.startDate,
             listingsSearch.endDate,
             listingsSort.sort,
+            DEFAULT_LIMIT,
         ],
-        queryFn: () =>
+        queryFn: ({ pageParam }) =>
             getListings({
-                queryType: "all",
                 ...categoriesFilter,
                 ...listingsSearch,
                 ...listingsSort,
+                headers: {
+                    cookie: headerList.get("cookie") || "",
+                },
+                limit: DEFAULT_LIMIT,
+                cursor: pageParam ?? undefined,
             }),
+        initialPageParam: undefined,
     });
 
     return (

@@ -20,7 +20,7 @@ import { useLoginModal } from "../../hooks/use-login-modal";
 import { useRegisterModal } from "../../hooks/use-register-modal";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useMemo } from "react";
 
 interface SignInModalProps {
@@ -37,12 +37,10 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 export const SignInModal = ({ open, onOpenChange }: SignInModalProps) => {
     const router = useRouter();
     const pathname = usePathname();
-    const query = useSearchParams();
 
     const currentUrl = useMemo(() => {
-        const queryString = query.toString();
-        return queryString ? `${pathname}?${queryString}` : pathname;
-    }, [pathname, query]);
+        return pathname;
+    }, [pathname]);
 
     const { onCloseLoginModal } = useLoginModal();
     const { onOpenRegisterModal } = useRegisterModal();

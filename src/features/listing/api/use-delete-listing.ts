@@ -23,6 +23,7 @@ export const useDeleteListing = () => {
         onSuccess: () => {
             toast.success("Listing deleted");
             queryClient.invalidateQueries({ queryKey: ["listings"] });
+            queryClient.invalidateQueries({ queryKey: ["listings-by-owner"] });
             queryClient.invalidateQueries({ queryKey: ["listings-favorite"] });
             queryClient.invalidateQueries({
                 queryKey: ["reservations"],

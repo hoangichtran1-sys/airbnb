@@ -121,7 +121,7 @@ export const NotificationMenu = () => {
                     )}
                 </div>
                 <Separator />
-                <div className="space-y-1">
+                <div className="space-y-1 mt-2">
                     {notifications.length > 0 ? (
                         notifications.map((n) => (
                             <div
@@ -134,7 +134,7 @@ export const NotificationMenu = () => {
                                     removingId === n.id &&
                                         "opacity-0 translate-x-5",
                                     updatingId === n.id &&
-                                        "opacity-0 translate-y-5",
+                                        "opacity-70",
                                 )}
                             >
                                 <div className="absolute top-2 right-2 flex flex-row gap-x-2">
@@ -144,7 +144,7 @@ export const NotificationMenu = () => {
                                         size="icon-xs"
                                         onClick={() => handleUpdate(n.id)}
                                         disabled={
-                                            update.isPending || remove.isPending
+                                            update.isPending || remove.isPending || n.status === "READ"
                                         }
                                     >
                                         <CheckIcon />
