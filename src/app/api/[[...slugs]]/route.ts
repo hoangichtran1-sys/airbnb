@@ -6,7 +6,7 @@ import { listingRouter } from "@/features/listing/server/routers";
 import { reservationRouter } from "@/features/reservations/server/routers";
 import { notificationRouter } from "@/features/notifications/server/routers";
 
-const app = new Elysia({ prefix: "/api", name: "base-router" })
+export const app = new Elysia({ prefix: "/api", name: "base-router" })
     .error({
         BUSINESS_ERROR: BusinessError,
     })

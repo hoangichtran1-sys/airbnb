@@ -21,6 +21,7 @@ export const useCreateReservation = () => {
             const { data, error } = await eden.reservations.post(body);
 
             if (error) {
+                console.log(error);
                 if (error.value.type === "validation") {
                     throw {
                         message: "Invalid fields input",

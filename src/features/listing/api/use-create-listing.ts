@@ -17,6 +17,7 @@ export const useCreateListing = () => {
             const { data, error } = await eden.listings.rent.post(body);
 
             if (error) {
+                console.log(error);
                 if (error.value.type === "validation") {
                     throw {
                         message: "Invalid fields input",
