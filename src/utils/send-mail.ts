@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { BusinessError } from "@/config/error";
 import { env } from "@/lib/env";
 import { transporter } from "@/lib/nodemailer";
 
@@ -30,6 +31,6 @@ export async function sendEmail({
         return info;
     } catch (error) {
         console.error("Nodemailer Error: ", error);
-        throw error;
+        throw new BusinessError("Failed to send email");
     }
 }
