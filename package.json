@@ -8,6 +8,7 @@
         "start": "next start",
         "lint": "eslint",
         "check:types": "tsc --noEmit",
+        "postinstall": "prisma generate",
         "dev:webhook": "ngrok http 3000 --url https://default.internal",
         "db:dev": "prisma studio",
         "inngest:dev": "inngest-cli dev",
