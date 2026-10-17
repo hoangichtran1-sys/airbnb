@@ -28,7 +28,7 @@ export const useRemoveFavorite = () => {
             return data;
         },
         onSuccess: (data) => {
-            toast.success("Added this favorite for listing");
+            toast.success("Removed this favorite for listing");
             queryClient.invalidateQueries({ queryKey: ["listings"] });
             queryClient.invalidateQueries({ queryKey: ["listings-by-owner"] });
             queryClient.invalidateQueries({ queryKey: ["reservations"] });

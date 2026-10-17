@@ -8,10 +8,14 @@ export type ResponseType = Treaty.Data<ReturnType<typeof eden.listings>["get"]>;
 
 interface UseGetListingProps {
     listingId: string;
+    headers?: HeadersInit;
 }
 
-export const getListing = async ({ listingId }: UseGetListingProps) => {
-    const { data, error } = await eden.listings({ listingId }).get();
+export const getListing = async ({
+    listingId,
+    headers,
+}: UseGetListingProps) => {
+    const { data, error } = await eden.listings({ listingId }).get({ headers });
 
     if (error) {
         throw error.value;

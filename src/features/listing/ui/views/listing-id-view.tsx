@@ -34,8 +34,8 @@ export const ListingIdView = ({
 }: ListingIdViewProps) => {
     const router = useRouter();
 
-    const disabledDates = useMemo(() => {
-        let dates: Date[] = [];
+    const timestamps = useMemo(() => {
+        const uniqueTimestamps = new Set<number>();
 
         reservations.forEach((reservation) => {
             const range = eachDayOfInterval({
@@ -43,11 +43,13 @@ export const ListingIdView = ({
                 end: new Date(reservation.endDate),
             });
 
-            dates = [...dates, ...range];
+            range.forEach((date) => uniqueTimestamps.add(date.getTime()));
         });
 
-        return dates;
+        return uniqueTimestamps;
     }, [reservations]);
+
+    const dates = Array.from(timestamps).map((time) => new Date(time));
 
     const [dateRange, setDateRange] = useState<Range>(initialDateRange);
 
@@ -121,7 +123,7 @@ export const ListingIdView = ({
                                 dateRange={dateRange}
                                 onSubmit={onCreateReservation}
                                 disabled={createReservation.isPending}
-                                disabledDates={disabledDates}
+                                disabledDates={dates}
                             />
                         </div>
                     </div>

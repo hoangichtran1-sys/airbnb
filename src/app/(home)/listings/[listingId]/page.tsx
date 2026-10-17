@@ -11,6 +11,7 @@ import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { ListingIdViewSkeleton } from "@/features/listing/ui/views/listing-id-view";
 import { EmptyState } from "@/components/empty-state";
+import { headers } from "next/headers";
 
 interface PageProps {
     params: Promise<{
@@ -23,9 +24,17 @@ const Page = async ({ params }: PageProps) => {
 
     const queryClient = new QueryClient();
 
+    const headerList = await headers();
+
     await queryClient.prefetchQuery({
         queryKey: ["listing", listingId],
-        queryFn: () => getListing({ listingId }),
+        queryFn: () =>
+            getListing({
+                listingId,
+                headers: {
+                    cookie: headerList.get("cookie") || "",
+                },
+            }),
     });
 
     await queryClient.prefetchQuery({
